@@ -8,24 +8,18 @@ from sqlalchemy import *
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker, mapper
 
-#TODO: don't need urllib and urllib2, find out why both are here
-#TODO: shouldn't need the import * if I declare what I need below
-
 #database config
-engine = create_engine('sqlite:///talerts.sql')
+engine = create_engine('sqlite:///phil.cdc.sql')
 
-# Instantiates the db #
-## TODO: Make this happen as-needed, not every time
-## Actually, .create_all(engine) provides this check for me.  This is just a bit messy.
+# Instantiate the db #
 
 metadata = MetaData()
-talerts_table = Table('talerts', metadata,
+phil_table = Table('phil', metadata,
     Column('id', Integer, primary_key=True),
-    Column('guid', Integer, unique=True),
-    Column('title', String),
-    Column('content', String),
-    Column('mbta_date', DateTime),
-    Column('timestamp', DateTime)
+    Column('', String),
+    Column('', String),
+    Column('creation_date', DateTime),
+    Column('access_time', DateTime)
 )
 metadata.create_all(engine) 
  
