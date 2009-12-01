@@ -5,8 +5,14 @@ http://brevity.org/lickr/
 http://commons.wikimedia.org/wiki/User:FlickrLickr 'perl wikipedia <-> flickr bot'
 
 
-Indian Health Service Photo Gallery 
-------------------------------------
+Other CDC and Public Domain image libraries
+-------------------------------------------
+
+### Parasite Image Library (CDC) ###
+
+    http://www.dpd.cdc.gov/DPDx/HTML/Image_Library.htm
+
+### Indian Health Service Photo Gallery ###
     http://www.ihs.gov/publicinfo/photogallery/index.cfm
     http://www.ihs.gov/publicinfo/photogallery/PG\_display.cfm?
 
