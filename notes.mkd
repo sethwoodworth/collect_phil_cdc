@@ -1,3 +1,10 @@
+Information about the CDC Public Health Image Library
+-----------------------------------------------------
+http://phil.cdc.gov/phil/faq.asp
+http://phil.cdc.gov/phil/links.asp
+
+    'If you have a suggestion or comment or are having technical difficulties, specific to the Public Health Image Library, e-mail us at phpphil@cdc.gov'
+
 Flickr metadata syncing
 -----------------------
 ### Various projects called FlickrLickr ###
