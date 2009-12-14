@@ -1,4 +1,101 @@
-Indian Health Service Photo Gallery 
-------------------------------------
+Information about the CDC Public Health Image Library
+-----------------------------------------------------
+http://phil.cdc.gov/phil/faq.asp
+http://phil.cdc.gov/phil/links.asp
+
+    'If you have a suggestion or comment or are having technical difficulties, specific to the Public Health Image Library, e-mail us at phpphil@cdc.gov'
+
+Flickr metadata syncing
+-----------------------
+### Various projects called FlickrLickr ###
+http://brevity.org/lickr/
+http://commons.wikimedia.org/wiki/User:FlickrLickr 'perl wikipedia <-> flickr bot'
+
+
+Other CDC and Public Domain image libraries
+-------------------------------------------
+### Other CDC Library ###
+    Newsroom images
+    http://www.cdc.gov/media/subtopic/images.htm
+
+
+### Parasite Image Library (CDC) ###
+
+    http://www.dpd.cdc.gov/DPDx/HTML/Image_Library.htm
+
+### Indian Health Service Photo Gallery ###
     http://www.ihs.gov/publicinfo/photogallery/index.cfm
-    http://www.ihs.gov/publicinfo/photogallery/PG_display.cfm?image_num=949&image_year=1961&era_name=Kennedy&era_start=1961&era_end=1962&alt_desc=%20Mr.%20&%20Mrs.%20Miles%20Brandon%20being%20congratulated%20on%20their%20marriage%20by%20Dr.%20Carruth%20J.%20Wagner.&IHSArea_name=Headquarters&SubArea_name=Rockville,%20MD&USRegion_name=Northeast
+    http://www.ihs.gov/publicinfo/photogallery/PG\_display.cfm?
+
+
+        image_num=949&
+        image_year=1961&
+        era_name=Kennedy&
+        era_start=1961&
+        era_end=1962&
+        alt_desc=%20Mr.%20&%20Mrs.%20Miles%20Brandon%20being%20congratulated%20on%20their%20marriage%20by%20Dr.%20Carruth%20J.%20Wagner.&
+        IHSArea_name=Headquarters&
+        SubArea_name=Rockville,%20MD&
+        USRegion_name=Northeast
+
+### US Customs Service ###
+
+    http://www.customs.gov/xp/cgov/newsroom/multimedia/photo_gallery/
+
+### USDA ###
+
+index
+    http://www.fsis.usda.gov/News_&_Events/Image_Libraries/index.asp
+
+    Where are the actual images?  The USDA is allowed to charge money to make reproductions and they mysteriously don't have images viewable online.
+    http://www.usda.gov/wps/portal/!ut/p/_s.7_0_A/7_0_2E5?navid=FIND_A_PHOTO&navtype=RT
+
+Event photography
+    http://www.fsis.usda.gov/news_&_events/2006_News_Photo_Gallery/index.asp
+
+Ag Research Service
+    Subset of the USDA's archive.
+    http://www.ars.usda.gov/is/graphics/photos/fieldimages.new.htm
+    ~2k images available? seemingly irregular URI structure.
+
+
+### National Institute of Diabetes and Digestive and Kidney Diseases (NIH) ###
+
+    http://www.catalog.niddk.nih.gov/ImageLibrary/
+
+### National Institute of Environmental Health Sciences (NIH) ###
+    http://www.niehs.nih.gov/research/atniehs/labs/lep/path-support/immuno/images.cfm
+
+### National Instittue of General Medical Sciences (NIH) (~344 - 2000)###
+    http://images.nigms.nih.gov/index.cfm?event=doSearch
+    http://publications.nigms.nih.gov/biobeat/gallery/index.html (cool images)
+
+### National Center for Complementary and Alternative Medicine (NIH)
+    *Possibly Copyright*
+    http://nccam.nih.gov/news/multimedia/gallery/legalcopy.htm
+
+### National Eye Institue ###
+    http://www.nei.nih.gov/photo/keyword.asp?match=any
+
+### National Human Genome Research Institue ###
+    http://www.genome.gov/10005141
+
+### National Institue on Aging ###
+    http://www.nia.nih.gov/Alzheimers/Resources/HighRes.htm
+
+### National Institue on Alchohol Abuse and Alchoholism ###
+    http://www.niaaa.nih.gov/Resources/GraphicsGallery/default.htm
+
+### National Institue of Arthritis and Musculoskeletal and Skin Diseases (NIH)
+    http://images.niams.nih.gov/searchresults.cfm?type=newest
+
+### National INstitue of Biomedical Imaging and Bioengineering ###
+    http://www.nibib.nih.gov/publicPage.cfm?section=gallery&action=view&page=1
+
+### National Cancer Institue ###
+    http://visualsonline.cancer.gov/browseaction.cfm?year=oldest
+    ~2740 images
+
+### Images from the History of Medicine IHM ###
+    http://ihm.nlm.nih.gov/luna/servlet/view/all
+    ~35,000
