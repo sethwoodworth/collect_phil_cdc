@@ -1,37 +1,37 @@
+from BeautifulSoup import BeautifulSoup
 import urllib
 import urllib2
 import os.path
 import cookielib
 
 
-
-
-def scrape_cdc_phil(id):
+def cdc_phil_scrape(id):
 	url_to_scrape = 'http://phil.cdc.gov/phil/details.asp';
+	# this post data doesn't seem to really matter, as long as it is correctly formed
 	image_page_post_values = {'count':	'1',
-	'displaymode':	'1',
-	'formaction':	'',
-	'imagelist':	id,
-	'imagesperpage':	'15',
-	'keywords':	'',
-	'mypictures':	'',
-	'page':	'1',
-	'pages':	'1',
-	'philid':	id,
-	'previouskeywords':	'',
-	'referingpagetag':	'',
-	'referingpageurl':	'',
-	'returnpage':	'quicksearch.asp',
-	'searchtype':	'all',
+		'displaymode':	'1',
+		'formaction':	'',
+		'imagelist':	id,
+		'imagesperpage':	'15',
+		'keywords':	'',
+		'mypictures':	'',
+		'page':	'1',
+		'pages':	'1',
+		'philid':	id,
+		'previouskeywords':	'',
+		'referingpagetag':	'',
+		'referingpageurl':	'',
+		'returnpage':	'quicksearch.asp',
+		'searchtype':	'all',
 	}
 	quicksearch_page_post_values = {
-	'formaction':	'SEARCH',
-	'illustrations':	'on',
-	'keywords':	'liver',
-	'keywordstext':	'liver',
-	'photos':	'on',
-	'searchtype':	'photo|illustration|video',
-	'video':	'on',
+		'formaction':	'SEARCH',
+		'illustrations':	'on',
+		'keywords':	'liver',
+		'keywordstext':	'liver',
+		'photos':	'on',
+		'searchtype':	'photo|illustration|video',
+		'video':	'on',
 	}
 
 	urlopen = urllib2.urlopen
@@ -64,6 +64,7 @@ def scrape_cdc_phil(id):
 	txheaders =  {'User-agent' : 'Mozilla/4.0 (compatible; MSIE 5.5; Windows NT)'}
 
 	# we have to step through the landing page and the search results pages in order to access an individual image's page
+	# otherwise the site gives us session errors
 	# so we go ahead and do that, picking up the necessary cookies along the way
 	req = Request('http://phil.cdc.gov/phil/home.asp', None, txheaders)
 	#cj.save(COOKIEFILE)                     # save the cookies again
@@ -76,9 +77,9 @@ def scrape_cdc_phil(id):
 	req = Request(url_to_scrape, urllib.urlencode(image_page_post_values), txheaders)
 	handle = urlopen(req)
 
-	return handle.read() #returns the page
+	return BeautifulSoup(handle.read()) #returns the page
 
 
 
 if __name__ == '__main__':
-	print scrape_cdc_phil(1)
+	print scrape_cdc_phil(11436)
