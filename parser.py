@@ -17,21 +17,38 @@ def parse_img(soup):
 
     # now we loop through the rows, slurping out the info as we go
     for rowContents in rows:
-        print rowContents
-    desc = str(rows[0]('td')[1]) #FIXME: i'm just flattening the html here
-    # it's just p and b tags, i think.
-    # we skip row 1 because it just has a link to the hi-res img
-    provider = rows[2]('td')[1].string
-    print provider
-    creation = rows[3]('td')[1].string #TODO: turn this into a datetime
-    credit = rows[4]('td')[1].string 
-    #we skip row 5, which is "links"
-    categories = str(rows[6]('td')[1]) #same as with desc, except the html is much more complicated.  we should probably parse this more carefully.
-    # TODO: the rest of the parsing
+	try:
+		fieldName = rowContents('td')[0]('b')[0].string
+		try:
+			fieldValue = rowContents('td')[1]
+			if fieldName == 'Description:':
+				#FIXME: i'm just flattening the html here
+				# it's just p and b tags, i think.
+				desc = str(fieldValue)
+			elif fieldName == 'Content Providers(s):':
+				provider = fieldValue.string
+			elif fieldName == 'Creation Date:':
+				#TODO: turn this into a datetime
+				creation = fieldValue.string
+			elif fieldName == 'Photo Credit:':
+				credit = fieldValue.string
+			#elif fieldName == 'Links:':
+			#	links = fieldValue.string
+			elif fieldName == 'Categories:':
+				# FIXME: same as with description, except the html is more complicated.
+				# we should probably parse this more carefully
+				categories = str(fieldValue)
+			#elif fieldName == 'Copyright Restrictions:':
+			#	copyright = fieldValue.string
+		except:
+			print "error parsing the field's value"
+
+	except:
+		print "well, that one didn't work"
 
     # before we return the dict of data,
     # download the hires image
-    # grabbing the lores image url
+    # grabbing the lores image url:
     # note that we have to go to the original soup that we were passed in order to do this
     lores_img_url = soup("h2")[0].parent("img")[0]['src']
     # the hires img url is a simple substitution from there
@@ -57,5 +74,7 @@ def test_parse():
     f = open('5423.html')
     raw_html = f.read()
     htmlSoup = BeautifulSoup(raw_html)
-    parse_img(htmlSoup)
+    print parse_img(htmlSoup)
 
+if __name__ == '__main__':
+	test_parse()
