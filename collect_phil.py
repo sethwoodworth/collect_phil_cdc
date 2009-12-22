@@ -24,7 +24,10 @@ def dl_hires_img(hires_img_url, img_id):
             
 #just run through this for each image on the site. boom.
 def cdc_phil_scrape_and_store(id):
+	bootstrap()
 	soup = cdc_phil_scrape(id)
 	metadata = parse_img(soup)
+	print metadata
+	#dl_hires_img(metadata['path_to_img'], metadata['id'])
 
 cdc_phil_scrape_and_store(1)
