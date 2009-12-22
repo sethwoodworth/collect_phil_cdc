@@ -20,3 +20,40 @@ def bootstrap_db():
 	    Column('access_time', DateTime) # seth: time/day we accessed the content
 	)
 	metadata.create_all(db)
+
+
+# DB Class interactions 
+Base = declarative_base()
+
+class Talert(Base):
+    __tablename__ = 'phil'
+
+    id = Column(Integer, primary_key=True)
+    desc = Column(String)
+    categories = Column(String)
+    credit = Column(String)
+    provider = Column(String)
+    source = Column(String)
+    path_to_img = Column(String)
+    is_color = Column(Boolean)
+    creation = Column(Integer)
+    access_time = Column(Integer)
+
+    def __init__(id, desc, categories, credit, provider, source, path_to_img, is_color, creation, access_time):
+        self.id = id
+        self.desc = desc
+        self.categories = categories
+        self.credit = credit
+        self.provider = provider
+        self.source = source
+        self.path_to_img = path_to_img
+        self.is_color = is_color
+        self.creation = creation
+        self.access_time = access_time
+
+
+    def __repr__(self):
+        return "<phil('%s','%s','%s','%s','%s''%s','%s','%s','%s','%s')>" % (self.id, self.desc, self.categories, self.credit, self.provider, self.source, self.path_to_img, self.is_color, self.creation, self.access_time)
+
+Session = sessionmaker(bind=engine)
+session = Session()
