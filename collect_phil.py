@@ -14,20 +14,46 @@ def mkdir(dirname):
 	if not os.path.isdir("./" + dirname + "/"):
 		os.mkdir("./" + dirname + "/")
 
-def bootstrap():
+# run this before downloading hires images
+def bootstrap_filestructure():
 	mkdir(HIRES_IMG_DIR)
-	bootstrap_db()
 
 def dl_hires_img(hires_img_url, img_id):
 	urllib.urlretrieve(hires_img_url, HIRES_IMG_DIR + '/' + img_id + '.tif')
+'''
+def dl_all_hires_imgs():
+	#TODO: write this function (the next line is pseudocode)	
+	for every item in the database as imgMetadata
+		dl_hires_img(imgMetadata['path_to_img'], imgMetadata['id'])
+'''
 
-            
-#just run through this for each image on the site. boom.
-def cdc_phil_scrape_and_store(id):
-	bootstrap()
-	soup = cdc_phil_scrape(id)
+# downloads a single image page, parses it, and shoves its data in the database
+def scrape_and_parse(id):
+	try:
+		soup = cdc_phil_scrape(id)
+		metadata = parse_img(soup)
+		# TODO: here, we shove the metadata in the database
+		# print metadata
+	except:
+		return FALSE
+
+
+def scrape_and_parse_everything():
+	bootstrap_db()
+	id=1
+	while True:
+		try:
+			scrape_and_parse(id)
+			id+=1
+		except:
+			break
+
+
+def test_scrape():
+	bootstrap_db()
+	soup = cdc_phil_scrape(1)
 	metadata = parse_img(soup)
 	print metadata
-	#dl_hires_img(metadata['path_to_img'], metadata['id'])
 
-cdc_phil_scrape_and_store(1)
+if __name__ == '__main__':
+	test_scrape()
