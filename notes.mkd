@@ -99,3 +99,10 @@ Ag Research Service
 ### Images from the History of Medicine IHM ###
     http://ihm.nlm.nih.gov/luna/servlet/view/all
     ~35,000
+
+
+### CC-licensed images ###
+
+### Encyclopedia of Life
+	http://www.eol.org/
+	images of like every species of everything.
