@@ -67,7 +67,7 @@ def cdc_phil_scrape(id):
 	# otherwise the site gives us session errors
 	# so we go ahead and do that, picking up the necessary cookies along the way
 	req = Request('http://phil.cdc.gov/phil/home.asp', None, txheaders)
-	#cj.save(COOKIEFILE)                     # save the cookies again
+	#cj.save(COOKIEFILE)                     # save the cookies 
 	handle = urlopen(req)
 	req = Request('http://phil.cdc.gov/phil/quicksearch.asp', urllib.urlencode(quicksearch_page_post_values), txheaders)
 	#cj.save(COOKIEFILE)                     # save the cookies again
