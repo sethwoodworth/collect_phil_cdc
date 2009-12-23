@@ -1,25 +1,27 @@
 from sqlalchemy import *
+from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy.orm import sessionmaker, mapper
 
-def bootstrap_db():
-	db = create_engine('sqlite:///phil.cdc.sql')
 
-	db.echo = True
-	metadata = MetaData(db)
+db = create_engine('sqlite:///phil.cdc.sql')
 
-	phil = Table('phil', metadata,
-	    Column('id', Integer, primary_key=True),
-	    Column('desc', String),         # Description - Extensive and authoritative explanation of the visual image or video file
-	    Column('categories', String),   # Categories - used to describe the image
-	    Column('credit', String),       # Photo Credit - Photographer or Videographer who took the photo or shot the video
-	    Column('provider', String),      # Content Provider - The contributor of the asset
-	    Column('source', String),       # Source Library - Where the image originated
-	    Column('path_to_img', String),  # seth: static url to hi-res images
-	    Column('is_color', Boolean),    # Color Scheme - Color or Black & White
-	    Column('creation', DateTime),   # Creation Date - When the object was created (photo taken, video shot, etc.)
-	    Column('upload', DateTime),     # Upload Date - When the image entered the PHIL database
-	    Column('access_time', DateTime) # seth: time/day we accessed the content
-	)
-	metadata.create_all(db)
+db.echo = True
+metadata = MetaData(db)
+
+phil = Table('phil', metadata,
+    Column('id', Integer, primary_key=True),
+    Column('desc', String),         # Description - Extensive and authoritative explanation of the visual image or video file
+    Column('categories', String),   # Categories - used to describe the image
+    Column('credit', String),       # Photo Credit - Photographer or Videographer who took the photo or shot the video
+    Column('provider', String),      # Content Provider - The contributor of the asset
+    Column('source', String),       # Source Library - Where the image originated
+    Column('path_to_img', String),  # seth: static url to hi-res images
+    Column('is_color', Boolean),    # Color Scheme - Color or Black & White
+    Column('creation', DateTime),   # Creation Date - When the object was created (photo taken, video shot, etc.)
+    Column('upload', DateTime),     # Upload Date - When the image entered the PHIL database
+    Column('access_time', DateTime) # seth: time/day we accessed the content
+)
+metadata.create_all(db)
 
 
 # DB Class interactions 
@@ -55,5 +57,5 @@ class Talert(Base):
     def __repr__(self):
         return "<phil('%s','%s','%s','%s','%s''%s','%s','%s','%s','%s')>" % (self.id, self.desc, self.categories, self.credit, self.provider, self.source, self.path_to_img, self.is_color, self.creation, self.access_time)
 
-Session = sessionmaker(bind=engine)
+Session = sessionmaker(bind=db)
 session = Session()

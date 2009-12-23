@@ -39,7 +39,6 @@ def scrape_and_parse(id):
 
 
 def scrape_and_parse_everything():
-	bootstrap_db()
 	id=1
 	while True:
 		try:
@@ -50,7 +49,6 @@ def scrape_and_parse_everything():
 
 
 def test_scrape():
-	bootstrap_db()
 	soup = cdc_phil_scrape(1)
 	metadata = parse_img(soup)
 	print metadata
