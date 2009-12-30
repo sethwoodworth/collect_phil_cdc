@@ -4,22 +4,40 @@ from BeautifulSoup import BeautifulSoup
 
 
 def parse_img(soup):
+    # declare default values for all of our data, so that we don't get errors if fields aren't found on the page 
+    #t_id = 0
+    path_to_img = ''
+    desc = ''
+    categories = ''
+    credit = ''
+    provider = ''
+    #source
+    #is_color
+    creation = ''
+    #upload
+    #access_time
     # <table width="700" bgcolor="black" border="0" cellpadding="5" cellspacing="1">
     # isolate the table of data 
     block = soup.find(cellpadding="5")
     # grab the image id
     t_id = block.find('tr')('td')[1].string
     # shove all the rest of the rows of data into a list, organized by row
+    # we do this so that we can be sure that each item in the list is a row in our table of data
+    # otherwise, rows within tables that are nested within our data table (these /do/ exist) would be given separate indices in our list
     # i knows, this isn't pretty.  feel free to make it prettier --parker
-    # this means that row[0] is the second tr in the table
-    # TODO: better name here
-    rows = block.find('tr').findNextSiblings('tr')
+    # note that row[0] is the second tr in the table
+    rowsOfData = block.find('tr').findNextSiblings('tr')
+    # delete the last item (row) in this list. it's a checkbox to "add to favorites."
+    # it breaks the parser
+    del rowsOfData[len(rowsOfData)-1]
 
     # now we loop through the rows, slurping out the info as we go
-    for rowContents in rows:
+    for rowContents in rowsOfData:
 	try:
+		# grab the bolded text in the first column.  this is the field name
 		fieldName = rowContents('td')[0]('b')[0].string
 		try:
+			# grab the text (note, there may be markup here) in the second column.  this is the field value
 			fieldValue = rowContents('td')[1]
 			if fieldName == 'Description:':
 				#FIXME: i'm just flattening the html here
@@ -41,20 +59,20 @@ def parse_img(soup):
 			#elif fieldName == 'Copyright Restrictions:':
 			#	copyright = fieldValue.string
 		except:
-			print "error parsing the field's value"
+			print "error parsing table row. we were expecting two cells: one field with a bolded name and one field with data. rowContents were: "
+			print rowContents
 
 	except:
-		print "well, that one didn't work"
+		print "error parsing table row. we were expecting two cells: one field with a bolded name and one field with data. rowContents were: "
+		print rowContents
 
     # before we return the dict of data,
-    # download the hires image
+    # generate the hires img url
     # grabbing the lores image url:
     # note that we have to go to the original soup that we were passed in order to do this
     lores_img_url = soup("h2")[0].parent("img")[0]['src']
     # the hires img url is a simple substitution from there
     path_to_img = re.sub('_lores.jpg', '.tif', lores_img_url)
-    #FIXME: we can do this now, or we can do it later.  either way
-    #dl_hires_img(path_to_img, t_id)
     print t_id
     return {
         'id': t_id,
@@ -71,7 +89,7 @@ def parse_img(soup):
     }
     
 def test_parse():
-    f = open('5423.html')
+    f = open('examples/5423.html')
     raw_html = f.read()
     htmlSoup = BeautifulSoup(raw_html)
     print parse_img(htmlSoup)
