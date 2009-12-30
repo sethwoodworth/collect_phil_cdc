@@ -1,4 +1,5 @@
 import re
+import data_storer
 from BeautifulSoup import BeautifulSoup
 
 
@@ -56,22 +57,24 @@ def parse_img(soup):
     #FIXME: we can do this now, or we can do it later.  either way
     #dl_hires_img(path_to_img, t_id)
     print t_id
-    return {
-        'id': t_id,
-        'path_to_img': path_to_img,
-        'desc': desc,
-        'categories': categories,
-        'credit': credit,
-        'provider': provider,
-        #'source': source,
-        #'is_color': is_color,
-        'creation': creation,
-        #'upload': upload,
-        #'access_time': access_time,
-    }
+    return Phil(t_id, desc, categories, credit, provider, source, path_to_img, is_color, creation, access_time)
+
+    #return {
+    #    'id': t_id,
+    #    'path_to_img': path_to_img,
+    #    'desc': desc,
+    #    'categories': categories,
+    #    'credit': credit,
+    #    'provider': provider,
+    #    #'source': source,
+    #    #'is_color': is_color,
+    #    'creation': creation,
+    #    #'upload': upload,
+    #    #'access_time': access_time,
+    #}
     
 def test_parse():
-    f = open('5423.html')
+    f = open('./examples/5423.html')
     raw_html = f.read()
     htmlSoup = BeautifulSoup(raw_html)
     print parse_img(htmlSoup)
