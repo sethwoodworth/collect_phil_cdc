@@ -20,12 +20,12 @@ def bootstrap_filestructure():
 
 def dl_hires_img(hires_img_url, img_id):
 	urllib.urlretrieve(hires_img_url, HIRES_IMG_DIR + '/' + img_id + '.tif')
-'''
-def dl_all_hires_imgs():
-	#TODO: write this function (the next line is pseudocode)	
-	for every item in the database as imgMetadata
-		dl_hires_img(imgMetadata['path_to_img'], imgMetadata['id'])
-'''
+
+#def dl_all_hires_imgs():
+#	#TODO: write this function (the next line is pseudocode)	
+#	for every item in the database as imgMetadata
+#		dl_hires_img(imgMetadata['path_to_img'], imgMetadata['id'])
+
 
 # downloads a single image page, parses it, and shoves its data in the database
 def scrape_and_parse(id):
