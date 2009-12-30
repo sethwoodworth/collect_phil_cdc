@@ -41,14 +41,13 @@ def cdc_phil_scrape(id):
 	# that has useful load and save methods
 
 	# FIXME: this probably isn't necessary. commenting out for now
-	'''
-	COOKIEFILE = 'cookies.lwp'
-	# the path and filename to save your cookies in
-	if os.path.isfile(COOKIEFILE):
-	# if we have a cookie file already saved
-	# then load the cookies into the Cookie Jar
-		cj.load(COOKIEFILE)
-	'''
+
+	#COOKIEFILE = 'cookies.lwp'
+	## the path and filename to save your cookies in
+	#if os.path.isfile(COOKIEFILE):
+	## if we have a cookie file already saved
+	## then load the cookies into the Cookie Jar
+	#	cj.load(COOKIEFILE)
 
 	# Now we need to get our Cookie Jar
 	# installed in the opener;
