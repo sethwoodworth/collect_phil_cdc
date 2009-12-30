@@ -1,5 +1,6 @@
 import re
 import data_storer
+import time
 from BeautifulSoup import BeautifulSoup
 
 
@@ -14,9 +15,9 @@ def parse_img(soup):
     provider = ''
     #source
     #is_color
-    creation = ''
+    creation = None
     #upload
-    #access_time
+    access_time = time.strftime("%Y-%m-%d %H:%M:%S", time.gmtime())
     # <table width="700" bgcolor="black" border="0" cellpadding="5" cellspacing="1">
     # isolate the table of data 
     block = soup.find(cellpadding="5")
@@ -93,6 +94,7 @@ def parse_img(soup):
     
 def test_parse():
     f = open('./examples/5423.html')
+    raw_html = f.read()
     htmlSoup = BeautifulSoup(raw_html)
     print parse_img(htmlSoup)
 
