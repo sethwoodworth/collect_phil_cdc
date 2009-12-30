@@ -5,10 +5,10 @@ from sqlalchemy.orm import sessionmaker, mapper
 
 db = create_engine('sqlite:///phil.cdc.sql')
 
-db.echo = True
+#db.echo = True     #uncomment for db debug
 metadata = MetaData(db)
 
-phil = Table('phil', metadata,
+phil_table = Table('phil', metadata,
     Column('id', Integer, primary_key=True),
     Column('desc', String),         # Description - Extensive and authoritative explanation of the visual image or video file
     Column('categories', String),   # Categories - used to describe the image
@@ -27,7 +27,7 @@ metadata.create_all(db)
 # DB Class interactions 
 Base = declarative_base()
 
-class Talert(Base):
+class Phil(Base):
     __tablename__ = 'phil'
 
     id = Column(Integer, primary_key=True)
@@ -41,7 +41,7 @@ class Talert(Base):
     creation = Column(Integer)
     access_time = Column(Integer)
 
-    def __init__(id, desc, categories, credit, provider, source, path_to_img, is_color, creation, access_time):
+    def __init__(self, id, desc, categories, credit, provider, source, path_to_img, is_color, creation, access_time):
         self.id = id
         self.desc = desc
         self.categories = categories
@@ -55,7 +55,17 @@ class Talert(Base):
 
 
     def __repr__(self):
-        return "<phil('%s','%s','%s','%s','%s''%s','%s','%s','%s','%s')>" % (self.id, self.desc, self.categories, self.credit, self.provider, self.source, self.path_to_img, self.is_color, self.creation, self.access_time)
+        return "<Phil('%s','%s','%s','%s','%s','%s','%s','%s','%s','%s')>" % (self.id, self.desc, self.categories, self.credit, self.provider, self.source, self.path_to_img, self.is_color, self.creation, self.access_time)
 
 Session = sessionmaker(bind=db)
 session = Session()
+
+
+def test_db():
+    barv = Phil(0, 'desc', 'categories', 'credit', 'provider', 'source', 'path_to_img', 'True', 0000, 0000)
+    session.add(barv)
+    session.commit()
+
+
+if __name__ == '__main__':
+    test_db()
