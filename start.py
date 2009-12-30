@@ -2,7 +2,7 @@ from BeautifulSoup import BeautifulSoup
 import urllib
 import urllib2
 from scraper import *
-from database import *
+from data_storer import *
 from parser import *
 
 
