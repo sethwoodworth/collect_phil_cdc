@@ -6,7 +6,7 @@ from BeautifulSoup import BeautifulSoup
 
 
 def parse_img(html):
-    # declare default values for all of our data, so that we don't get errors if fields aren't found on the page 
+    # declare default values
     #t_id = 0
     path_to_img = ''
     desc = ''
@@ -19,13 +19,13 @@ def parse_img(html):
     #upload
     copyright = ''
     access_time = time.strftime("%Y-%m-%d %H:%M:%S", time.gmtime())
-    #soupify the html
+
+    # soupify the html
     soup = BeautifulSoup(html)
-    # <table width="700" bgcolor="black" border="0" cellpadding="5" cellspacing="1">
-    # isolate the table of data 
-    block = soup.find(cellpadding="5")
-    # grab the image id
-    t_id = block.find('tr')('td')[1].string
+    block = soup.find(cellpadding="5") # isolate the table of data with the unique cellpadding
+
+    # features
+    t_id = block.find('tr')('td')[1].string # grab the image id
     # shove all the rest of the rows of data into a list, organized by row
     # we do this so that we can be sure that each item in the list is a row in our table of data
     # otherwise, rows within tables that are nested within our data table (these /do/ exist) would be given separate indices in our list
@@ -79,7 +79,7 @@ def parse_img(html):
     lores_img_url = soup("h2")[0].parent("img")[0]['src']
     # the hires img url is a simple substitution from there
     path_to_img = re.sub('_lores.jpg', '.tif', lores_img_url)
-    print t_id
+    #print t_id
     #return Phil(t_id, desc, categories, credit, provider, source, path_to_img, is_color, creation, access_time)
 
     return {
