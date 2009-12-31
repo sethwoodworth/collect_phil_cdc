@@ -56,19 +56,20 @@ def scrape_everything():
 	while id <= 10:
 		try:
 			html = cdc_phil_scrape(id)
-			fp = open(RAW_HTML_DIR + '/' + id, 'w')
+			#print html
+			fp = open(RAW_HTML_DIR + '/' + str(id), 'w')
 			fp.write(html)
 			id+=1
 		except:
+			print "uh-oh. trouble getting a page."
 			break
 
 def test_scrape():
 	html = cdc_phil_scrape(1)
 	metadata = parse_img(html)
-    metadata
 	#print metadata[:10]
-    table.execute(metadata)
-    table.commit()
+	table.execute(metadata)
+	table.commit()
     
 if __name__ == '__main__':
 	test_scrape()
