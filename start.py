@@ -51,7 +51,11 @@ def scrape_and_parse_everything():
 def test_scrape():
 	soup = cdc_phil_scrape(1)
 	metadata = parse_img(soup)
-	print metadata
+    metadata
+	#print metadata[:10]
+    table.execute(metadata)
+    table.commit()
+    
 
 if __name__ == '__main__':
 	test_scrape()

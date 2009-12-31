@@ -18,6 +18,7 @@ phil_table = Table('phil', metadata,
     Column('path_to_img', String),  # seth: static url to hi-res images
     Column('is_color', Boolean),    # Color Scheme - Color or Black & White
     Column('creation', DateTime),   # Creation Date - When the object was created (photo taken, video shot, etc.)
+    #TODO: upload exists only here, but we have the data, add it back if exists in fields
     Column('upload', DateTime),     # Upload Date - When the image entered the PHIL database
     Column('access_time', DateTime) # seth: time/day we accessed the content
 )
@@ -41,6 +42,7 @@ class Phil(Base):
     creation = Column(Integer)
     access_time = Column(Integer)
 
+
     def __init__(self, id, desc, categories, credit, provider, source, path_to_img, is_color, creation, access_time):
         self.id = id
         self.desc = desc
@@ -60,12 +62,10 @@ class Phil(Base):
 Session = sessionmaker(bind=db)
 session = Session()
 
-
-def test_db():
-    barv = Phil(0, 'desc', 'categories', 'credit', 'provider', 'source', 'path_to_img', 'True', 0000, 0000)
-    session.add(barv)
-    session.commit()
+table = phil_table.insert()
+#table.execute(metadata)
+#table.commit()
 
 
-if __name__ == '__main__':
-    test_db()
+#if __name__ == '__main__':
+#    test_db()
