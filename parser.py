@@ -1,6 +1,7 @@
 import re
 import data_storer
 import time
+from BeautifulSoup import BeautifulSoup
 
 
 
@@ -98,8 +99,7 @@ def parse_img(html):
 def test_parse():
     f = open('./examples/5423.html')
     raw_html = f.read()
-    htmlSoup = BeautifulSoup(raw_html)
-    print parse_img(htmlSoup)
+    print parse_img(raw_html)
 
 if __name__ == '__main__':
 	test_parse()

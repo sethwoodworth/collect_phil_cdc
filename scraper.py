@@ -81,4 +81,4 @@ def cdc_phil_scrape(id):
 
 
 if __name__ == '__main__':
-	print scrape_cdc_phil(11436)
+	print cdc_phil_scrape(11436)
