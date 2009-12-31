@@ -13,8 +13,8 @@ def parse_img(html):
     categories = ''
     credit = ''
     provider = ''
-    #source
-    #is_color
+    source = ''
+    is_color = 'True'
     creation = None
     #upload
     copyright = ''
@@ -80,21 +80,20 @@ def parse_img(html):
     # the hires img url is a simple substitution from there
     path_to_img = re.sub('_lores.jpg', '.tif', lores_img_url)
     print t_id
-    return Phil(t_id, desc, categories, credit, provider, source, path_to_img, is_color, creation, access_time)
+    #return Phil(t_id, desc, categories, credit, provider, source, path_to_img, is_color, creation, access_time)
 
-    #return {
-    #    'id': t_id,
-    #    'path_to_img': path_to_img,
-    #    'desc': desc,
-    #    'categories': categories,
-    #    'credit': credit,
-    #    'provider': provider,
-    #    #'source': source,
-    #    #'is_color': is_color,
-    #    'creation': creation,
-    #    #'upload': upload,
-    #    #'access_time': access_time,
-    #}
+    return {
+        'id': t_id,
+        'desc': desc,
+        'categories': categories,
+        'credit': credit,
+        'provider': provider,
+        'source': source,
+        'path_to_img': path_to_img,
+        'is_color': is_color,
+        'creation': creation,
+        'access_time': access_time,
+    }
     
 def test_parse():
     f = open('./examples/5423.html')
