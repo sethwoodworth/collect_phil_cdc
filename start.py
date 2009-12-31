@@ -51,13 +51,16 @@ def scrape_and_parse_everything():
 def scrape_everything():
 	print "i should write this function"	
 
+def store_datum(dict):
+    table.execute(dict)
+    phil_table.commit()
+
 def test_scrape():
-	html = cdc_phil_scrape(1)
-	metadata = parse_img(html)
-    metadata
-	#print metadata[:10]
-    table.execute(metadata)
-    table.commit()
+    html = cdc_phil_scrape(1)
+    metadata = parse_img(html)
+    #print metadata[:10]
+    store_datum(metadata)
+
     
 if __name__ == '__main__':
 	test_scrape()
