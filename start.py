@@ -64,12 +64,17 @@ def scrape_everything():
 			print "uh-oh. trouble getting a page."
 			break
 
+def store_datum(dict):
+    table.execute(dict)
+    phil_table.commit()
+
 def test_scrape():
-	html = cdc_phil_scrape(1)
-	metadata = parse_img(html)
-	#print metadata[:10]
-	table.execute(metadata)
-	table.commit()
+    html = cdc_phil_scrape(1)
+    metadata = parse_img(html)
+    #print metadata[:10]
+    store_datum(metadata)
+
+>>>>>>> 17a0c041f4b601442b8e3e874daee93c1031a0d6:start.py
     
 if __name__ == '__main__':
 	test_scrape()
