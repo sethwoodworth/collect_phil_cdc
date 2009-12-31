@@ -9,6 +9,7 @@ from parser import *
 #where we will store the hires images
 #relative to the pwd, no trailing slash
 HIRES_IMG_DIR = 'cdc-phil-imgs-hires'
+RAW_HTML_DIR = 'cdc-phil-raw-html'
 
 def mkdir(dirname):
 	if not os.path.isdir("./" + dirname + "/"):
@@ -49,7 +50,17 @@ def scrape_and_parse_everything():
 
 
 def scrape_everything():
-	print "i should write this function"	
+	id=1
+	mkdir(RAW_HTML_DIR)	
+	#while True:
+	while id <= 10:
+		try:
+			html = cdc_phil_scrape(id)
+			fp = open(RAW_HTML_DIR + '/' + id, 'w')
+			fp.write(html)
+			id+=1
+		except:
+			break
 
 def store_datum(dict):
     table.execute(dict)
