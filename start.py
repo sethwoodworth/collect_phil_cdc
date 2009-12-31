@@ -30,8 +30,8 @@ def dl_hires_img(hires_img_url, img_id):
 # downloads a single image page, parses it, and shoves its data in the database
 def scrape_and_parse(id):
 	try:
-		soup = cdc_phil_scrape(id)
-		metadata = parse_img(soup)
+		html = cdc_phil_scrape(id)
+		metadata = parse_img(html)
 		# TODO: here, we shove the metadata in the database
 		# print metadata
 	except:
@@ -48,9 +48,12 @@ def scrape_and_parse_everything():
 			break
 
 
+def scrape_everything():
+	print "i should write this function"	
+
 def test_scrape():
-	soup = cdc_phil_scrape(1)
-	metadata = parse_img(soup)
+	html = cdc_phil_scrape(1)
+	metadata = parse_img(html)
 	print metadata
 
 if __name__ == '__main__':

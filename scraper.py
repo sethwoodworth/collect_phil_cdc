@@ -76,7 +76,7 @@ def cdc_phil_scrape(id):
 	req = Request(url_to_scrape, urllib.urlencode(image_page_post_values), txheaders)
 	handle = urlopen(req)
 
-	return BeautifulSoup(handle.read()) #returns the page
+	return handle.read() #returns the page
 
 
 

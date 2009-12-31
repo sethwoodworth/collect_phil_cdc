@@ -1,11 +1,10 @@
 import re
 import data_storer
 import time
-from BeautifulSoup import BeautifulSoup
 
 
 
-def parse_img(soup):
+def parse_img(html):
     # declare default values for all of our data, so that we don't get errors if fields aren't found on the page 
     #t_id = 0
     path_to_img = ''
@@ -17,7 +16,10 @@ def parse_img(soup):
     #is_color
     creation = None
     #upload
+    copyright = ''
     access_time = time.strftime("%Y-%m-%d %H:%M:%S", time.gmtime())
+    #soupify the html
+    soup = BeautifulSoup(html)
     # <table width="700" bgcolor="black" border="0" cellpadding="5" cellspacing="1">
     # isolate the table of data 
     block = soup.find(cellpadding="5")
@@ -58,8 +60,9 @@ def parse_img(soup):
 				# FIXME: same as with description, except the html is more complicated.
 				# we should probably parse this more carefully
 				categories = str(fieldValue)
-			#elif fieldName == 'Copyright Restrictions:':
-			#	copyright = fieldValue.string
+			#TODO: store copyright info in the database
+			elif fieldName == 'Copyright Restrictions:':
+				copyright = fieldValue.string
 		except:
 			print "error parsing table row. we were expecting two cells: one field with a bolded name and one field with data. rowContents were: "
 			print rowContents
