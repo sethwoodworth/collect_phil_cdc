@@ -74,7 +74,6 @@ def test_scrape():
     #print metadata[:10]
     store_datum(metadata)
 
->>>>>>> 17a0c041f4b601442b8e3e874daee93c1031a0d6:start.py
     
 if __name__ == '__main__':
 	test_scrape()
