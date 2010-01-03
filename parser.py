@@ -19,7 +19,7 @@ def parse_img(html):
     creation = None
     #upload
     copyright = ''
-    access_time = datetime.now() #time.strftime("%Y-%m-%d %H:%M:%S", time.gmtime())
+    access_time = datetime.today() #time.strftime("%Y-%m-%d %H:%M:%S", time.gmtime())
 
     # soupify the html
     soup = BeautifulSoup(html)
@@ -53,7 +53,7 @@ def parse_img(html):
 				provider = fieldValue.string
 			elif fieldName == 'Creation Date:':
 				#TODO: turn this into a datetime
-				creation = fieldValue.string
+				creation = datetime.strptime(fieldValue.string, "%Y")
 			elif fieldName == 'Photo Credit:':
 				credit = fieldValue.string
 			#elif fieldName == 'Links:':
@@ -66,7 +66,9 @@ def parse_img(html):
 			elif fieldName == 'Copyright Restrictions:':
 				copyright = fieldValue.string
 		except:
+			print sys.exc_info()[0]
 			print "error parsing table row. we were expecting two cells: one field with a bolded name and one field with data. rowContents were: "
+
 			print rowContents
 
 	except:

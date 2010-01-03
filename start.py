@@ -20,13 +20,23 @@ def bootstrap_filestructure():
 	mkdir(HIRES_IMG_DIR)
 	mkdir(RAW_HTML_DIR)	
 
+#FIXME: in these two functions, mkdir is run, which checks whether or not a dir exists.  this is inefficient.
+#because we will run this function once for every single image.  easier to ie make all the directories, then assume they exist?
+#or maybe we should just leave it.
+#(note that running mkdir only creates the dir if it doesnt already exist)
 def dl_hires_img(hires_img_url, img_id):
-	#TODO: group them in folders of 100
-	urllib.urlretrieve(hires_img_url, HIRES_IMG_DIR + '/' + img_id + '.tif')
+	floor = id - (id%100)
+	ceiling = str(floor + 100)
+	floor = str(floor)
+	mkdir(HIRES_IMG_DIR + '/' + floor + '--' + ceiling)
+	urllib.urlretrieve(hires_img_url, HIRES_IMG_DIR + '/' + floor + '--' + ceiling + '/' + img_id + '.tif')
 
 def store_raw_html(id, html):
-	#TODO: group them in folders of 100
-	fp = open(RAW_HTML_DIR + '/' + str(id), 'w')
+	floor = id - (id%100)
+	ceiling = str(floor + 100)
+	floor = str(floor)
+	mkdir(RAW_HTML_DIR + '/' + floor + '--' + ceiling)
+	fp = open(RAW_HTML_DIR + '/' + floor + '--' + ceiling + '/' + str(id), 'w')
 	fp.write(html)
 
 
@@ -53,7 +63,8 @@ def cdc_phil_scrape_range(start, end):
 		if not is_session_expired_page(html):
 			store_raw_html(current, html)
 			metadata = parse_img(html)
-			store_datum(metadata)
+			#FIXME: uncomment this and debug the database errors
+			#store_datum(metadata)
 			current+=1
 		# if we got a session error page:
 		else:
@@ -83,7 +94,7 @@ def test_scrape():
 
     
 if __name__ == '__main__':
-	#cdc_phil_scrape_range(123, 128)
+	#cdc_phil_scrape_range(73, 79)
 	test_scrape()
 
 
