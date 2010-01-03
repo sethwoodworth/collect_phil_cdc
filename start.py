@@ -29,10 +29,39 @@ def store_raw_html(id, html):
 	fp = open(RAW_HTML_DIR + '/' + str(id), 'w')
 	fp.write(html)
 
+
+def store_datum(dict):
+    table.execute(dict)
+    phil_table.commit()
+
 #def dl_all_hires_imgs():
 #	#TODO: write this function (the next line is pseudocode)	
 #	for every item in the database as imgMetadata
 #		dl_hires_img(imgMetadata['path_to_img'], imgMetadata['id'])
+
+
+
+
+def cdc_phil_scrape_range(start, end):
+	current = start
+	cookiejar = get_me_a_cookie()
+	print "got initial cookie"
+	while current <= end:
+		print str(current)
+		html = cdc_phil_scrape(current, cookiejar)
+		# if we didn't get a session error page:
+		if not is_session_expired_page(html):
+			store_raw_html(current, html)
+			metadata = parse_img(html)
+			store_datum(metadata)
+			current+=1
+		# if we got a session error page:
+		else:
+			print "got a session error page.  going to grab a new cookie..."
+			cookiejar = get_me_a_cookie()
+
+
+
 
 
 # downloads a single image page, parses it, and shoves its data in the database
@@ -40,32 +69,11 @@ def scrape_and_parse(id):
 	try:
 		html = cdc_phil_scrape(id)
 		metadata = parse_img(html)
-		# TODO: here, we shove the metadata in the database
+		store_datum(metadata)
 		# print metadata
 	except:
 		return FALSE
 
-
-
-def cdc_phil_scrape_range(start, end):
-	current = start
-	cookiejar = get_me_a_cookie()
-	while current <= end:
-		html = cdc_phil_scrape(current, cookiejar)
-		# if we didn't get a session error page:
-		if not is_session_expired_page(html):
-			store_raw_html(current, html)
-			#TODO: other stuff with the raw html (parse it, etc)
-			current+=1
-		# if we got a session error page:
-		else:
-			print "got a session error page.  going to grab a new cookie..."
-			cookiejar = get_me_a_cookie()
-			
-
-def store_datum(dict):
-    table.execute(dict)
-    phil_table.commit()
 
 def test_scrape():
     html = cdc_phil_scrape(1)
@@ -75,7 +83,7 @@ def test_scrape():
 
     
 if __name__ == '__main__':
-	#cdc_phil_scrape_range(113, 123)
+	#cdc_phil_scrape_range(123, 128)
 	test_scrape()
 
 

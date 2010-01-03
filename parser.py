@@ -1,6 +1,7 @@
 import re
 import data_storer
 import time
+from datetime import datetime
 from BeautifulSoup import BeautifulSoup
 
 
@@ -18,7 +19,7 @@ def parse_img(html):
     creation = None
     #upload
     copyright = ''
-    access_time = time.strftime("%Y-%m-%d %H:%M:%S", time.gmtime())
+    access_time = datetime.now() #time.strftime("%Y-%m-%d %H:%M:%S", time.gmtime())
 
     # soupify the html
     soup = BeautifulSoup(html)
