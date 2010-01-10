@@ -27,15 +27,15 @@ def dl_hires_img(hires_img_url, img_id):
     floor = id - (id%100)
     ceiling = str(floor + 100)
     floor = str(floor)
-    mkdir(HIRES_IMG_DIR + '/' + floor + '--' + ceiling)
-    urllib.urlretrieve(hires_img_url, HIRES_IMG_DIR + '/' + floor + '--' + ceiling + '/' + img_id + '.tif')
+    mkdir(HIRES_IMG_DIR + '/' + floor + '-' + ceiling)
+    urllib.urlretrieve(hires_img_url, HIRES_IMG_DIR + '/' + floor + '-' + ceiling + '/' + img_id + '.tif')
 
 def store_raw_html(id, html):
     floor = id - (id%100)
     ceiling = str(floor + 100)
     floor = str(floor)
-    mkdir(RAW_HTML_DIR + '/' + floor + '--' + ceiling)
-    fp = open(RAW_HTML_DIR + '/' + floor + '--' + ceiling + '/' + str(id), 'w')
+    mkdir(RAW_HTML_DIR + '/' + floor + '-' + ceiling)
+    fp = open(RAW_HTML_DIR + '/' + floor + '-' + ceiling + '/' + str(id), 'w')
     fp.write(html)
 
 
@@ -60,15 +60,15 @@ def cdc_phil_scrape_range(start, end):
         html = cdc_phil_scrape(current, cookiejar)
 	#print html
         # if we didn't get a session error page:
-	if not is_session_expired_page(html):
-            store_raw_html(current, html)
-            metadata = parse_img(html)
-            store_datum(metadata)
-            current+=1
+    if not is_session_expired_page(html):
+        store_raw_html(current, html)
+        metadata = parse_img(html)
+        store_datum(metadata)
+        current+=1
         # if we got a session error page:
-	else:
-            print "got a session error page.  going to grab a new cookie..."
-            cookiejar = get_me_a_cookie()
+    else:
+        print "got a session error page.  going to grab a new cookie..."
+        cookiejar = get_me_a_cookie()
 
 
 
