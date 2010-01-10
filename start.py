@@ -95,30 +95,3 @@ if __name__ == '__main__':
     bootstrap_filestructure()
     cdc_phil_scrape_range(1, 5)
     #test_scrape()
-
-
-
-
-#these methods are deprecated because they don't cleverly keep track of cookies
-#so they make many more http requests than necessary
-#def scrape_and_parse_everything():
-#    id=1
-#    while True:
-#        try:
-#            scrape_and_parse(id)
-#            id+=1
-#        except:
-#            break
-#def scrape_everything():
-#    id=1
-#    mkdir(RAW_HTML_DIR)    
-#    #while True:
-#    while id <= 10:
-#        try:
-#            html = cdc_phil_scrape(id)
-#            #print html
-#            store_raw_html(id, html)
-#            id+=1
-#        except:
-#            print "uh-oh. trouble getting a page."
-#            break
