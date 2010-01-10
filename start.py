@@ -22,19 +22,21 @@ def bootstrap_filestructure():
 # because we will run this function once for every single image.  easier to ie make all the directories, then assume they exist?
 # or maybe we should just leave it.
 # (note that running mkdir only creates the dir if it doesnt already exist)
+#TODO: the same zfill stuff we did in store_raw_html
 def dl_hires_img(hires_img_url, img_id):
     floor = id - (id%100)
     ceiling = str(floor + 100)
     floor = str(floor)
-    mkdir(HIRES_IMG_DIR + '/' + floor + '--' + ceiling)
-    urllib.urlretrieve(hires_img_url, HIRES_IMG_DIR + '/' + floor + '--' + ceiling + '/' + img_id + '.tif')
+    mkdir(HIRES_IMG_DIR + '/' + floor + '-' + ceiling)
+    urllib.urlretrieve(hires_img_url, HIRES_IMG_DIR + '/' + floor + '-' + ceiling + '/' + img_id + '.tif')
 
 def store_raw_html(id, html):
+    idstr = str(id).zfill(5)
     floor = id - (id%100)
-    ceiling = str(floor + 100)
-    floor = str(floor)
-    mkdir(RAW_HTML_DIR + '/' + floor + '--' + ceiling)
-    fp = open(RAW_HTML_DIR + '/' + floor + '--' + ceiling + '/' + str(id) + '.html', 'w')
+    ceiling = str(floor + 100).zfill(5)
+    floor = str(floor).zfill(5)
+    mkdir(RAW_HTML_DIR + '/' + floor + '-' + ceiling)
+    fp = open(RAW_HTML_DIR + '/' + floor + '-' + ceiling + '/' + idstr + '.html', 'w')
     fp.write(html)
 
 
