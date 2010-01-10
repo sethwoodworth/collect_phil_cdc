@@ -43,13 +43,13 @@ def store_raw_html(id, html):
 
 def store_datum(dict):
     table.execute(dict)
-    #phil_table.commit()
 
 #def dl_all_hires_imgs():
 #    #TODO: write this function (the next line is pseudocode)    
-#    for every item in the database as imgMetadata
+#    # FIXME: ok, this /pretty much/ works, but I think I want two loops, 
+#    # for different folders and a lot of error handling for big files
+#    for img_path in session.query(Phil).filter("id<224").order_by("id").all():
 #        dl_hires_img(imgMetadata['path_to_img'], imgMetadata['id'])
-
 
 
 def cdc_phil_scrape_range(start, end):
@@ -69,9 +69,6 @@ def cdc_phil_scrape_range(start, end):
         else:
             print "Session error. Need a new cookie..."
             cookiejar = get_me_a_cookie()
-
-
-
 
 
 # downloads a single image page, parses it, and shoves its data in the database
@@ -94,5 +91,5 @@ def test_scrape():
     
 if __name__ == '__main__':
     bootstrap_filestructure()
-    cdc_phil_scrape_range(1, 10)
+    cdc_phil_scrape_range(1, 11850)
     #test_scrape()
