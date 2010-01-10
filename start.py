@@ -1,6 +1,6 @@
-from BeautifulSoup import BeautifulSoup
+#from BeautifulSoup import BeautifulSoup
 import urllib
-import urllib2
+#import urllib2
 from scraper import *
 from data_storer import *
 from parser import *
@@ -42,7 +42,7 @@ def store_raw_html(id, html):
 
 def store_datum(dict):
     table.execute(dict)
-    phil_table.commit()
+    #phil_table.commit()
 
 #def dl_all_hires_imgs():
 #	#TODO: write this function (the next line is pseudocode)	
@@ -64,7 +64,7 @@ def cdc_phil_scrape_range(start, end):
 			store_raw_html(current, html)
 			metadata = parse_img(html)
 			#FIXME: uncomment this and debug the database errors
-			#store_datum(metadata)
+			store_datum(metadata)
 			current+=1
 		# if we got a session error page:
 		else:
@@ -94,8 +94,9 @@ def test_scrape():
 
     
 if __name__ == '__main__':
-	#cdc_phil_scrape_range(73, 79)
-	test_scrape()
+    bootstrap_filestructure()
+    cdc_phil_scrape_range(73, 79)
+	#test_scrape()
 
 
 
