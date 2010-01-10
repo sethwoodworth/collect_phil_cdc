@@ -1,4 +1,3 @@
-#from BeautifulSoup import BeautifulSoup
 import urllib
 #import urllib2
 from scraper import *
