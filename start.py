@@ -34,7 +34,7 @@ def store_raw_html(id, html):
     ceiling = str(floor + 100)
     floor = str(floor)
     mkdir(RAW_HTML_DIR + '/' + floor + '--' + ceiling)
-    fp = open(RAW_HTML_DIR + '/' + floor + '--' + ceiling + '/' + str(id), 'w')
+    fp = open(RAW_HTML_DIR + '/' + floor + '--' + ceiling + '/' + str(id) + '.html', 'w')
     fp.write(html)
 
 
@@ -46,7 +46,6 @@ def store_datum(dict):
 #    #TODO: write this function (the next line is pseudocode)    
 #    for every item in the database as imgMetadata
 #        dl_hires_img(imgMetadata['path_to_img'], imgMetadata['id'])
-
 
 
 
