@@ -54,20 +54,19 @@ def store_datum(dict):
 def cdc_phil_scrape_range(start, end):
     current = start
     cookiejar = get_me_a_cookie()
-    print "got initial cookie"
     while current <= end:
         print str(current)
         html = cdc_phil_scrape(current, cookiejar)
-	#print html
+	    #print html
         # if we didn't get a session error page:
     if not is_session_expired_page(html):
         store_raw_html(current, html)
         metadata = parse_img(html)
         store_datum(metadata)
         current+=1
-        # if we got a session error page:
+    # if we got a session error page
     else:
-        print "got a session error page.  going to grab a new cookie..."
+        print "Session error. Need a new cookie..."
         cookiejar = get_me_a_cookie()
 
 
