@@ -60,7 +60,7 @@ def parse_img(html):
 			#	links = fieldValue.string
 			elif fieldName == 'Categories:':
 				# FIXME: same as with description, except the html is more complicated.
-				# we should probably parse this more carefully
+				# it's probably much more important that we parse this part more carefully.  at the least, we should strip out the javascript.
 				categories = str(fieldValue)
 			#TODO: store copyright info in the database
 			elif fieldName == 'Copyright Restrictions:':

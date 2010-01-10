@@ -62,8 +62,8 @@ def cdc_phil_scrape_range(start, end):
 		if not is_session_expired_page(html):
 			store_raw_html(current, html)
 			metadata = parse_img(html)
-			#FIXME: uncomment this and debug the database errors
 			store_datum(metadata)
+			#If you want to do other stuff with each page, do it here
 			current+=1
 		# if we got a session error page:
 		else:
