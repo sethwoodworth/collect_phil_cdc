@@ -1,4 +1,5 @@
 import urllib
+import os.path
 #import urllib2
 from scraper import *
 from data_storer import *
@@ -93,5 +94,5 @@ def test_scrape():
     
 if __name__ == '__main__':
     bootstrap_filestructure()
-    cdc_phil_scrape_range(1, 5)
+    cdc_phil_scrape_range(1, 10)
     #test_scrape()

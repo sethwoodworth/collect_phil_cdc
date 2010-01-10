@@ -1,8 +1,6 @@
-from BeautifulSoup import BeautifulSoup
 import string
 import urllib
 import urllib2
-import os.path
 import cookielib
 
 def get_me_a_cookie():
@@ -107,4 +105,4 @@ def is_session_expired_page(html):
 
 
 if __name__ == '__main__':
-	print cdc_phil_scrape(1)
+	print cdc_phil_scrape(6)
