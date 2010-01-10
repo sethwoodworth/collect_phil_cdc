@@ -6,8 +6,7 @@ from data_storer import *
 from parser import *
 
 
-#where we will store the hires images
-#relative to the pwd, no trailing slash
+# store the hires images relative to the working directory
 HIRES_IMG_DIR = 'cdc-phil-imgs-hires'
 RAW_HTML_DIR = 'cdc-phil-raw-html'
 
@@ -20,10 +19,10 @@ def bootstrap_filestructure():
 	mkdir(HIRES_IMG_DIR)
 	mkdir(RAW_HTML_DIR)	
 
-#FIXME: in these two functions, mkdir is run, which checks whether or not a dir exists.  this is inefficient.
-#because we will run this function once for every single image.  easier to ie make all the directories, then assume they exist?
-#or maybe we should just leave it.
-#(note that running mkdir only creates the dir if it doesnt already exist)
+# FIXME: in these two functions, mkdir is run, which checks whether or not a dir exists.  this is inefficient.
+# because we will run this function once for every single image.  easier to ie make all the directories, then assume they exist?
+# or maybe we should just leave it.
+# (note that running mkdir only creates the dir if it doesnt already exist)
 def dl_hires_img(hires_img_url, img_id):
 	floor = id - (id%100)
 	ceiling = str(floor + 100)
