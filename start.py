@@ -53,20 +53,19 @@ def store_datum(dict):
 def cdc_phil_scrape_range(start, end):
     current = start
     cookiejar = get_me_a_cookie()
-    print "got initial cookie"
     while current <= end:
         print str(current)
         html = cdc_phil_scrape(current, cookiejar)
-	#print html
+	    #print html
         # if we didn't get a session error page:
-	if not is_session_expired_page(html):
+        if not is_session_expired_page(html):
             store_raw_html(current, html)
             metadata = parse_img(html)
             store_datum(metadata)
             current+=1
-        # if we got a session error page:
-	else:
-            print "got a session error page.  going to grab a new cookie..."
+        # if we got a session error page
+        else:
+            print "Session error. Need a new cookie..."
             cookiejar = get_me_a_cookie()
 
 
@@ -95,30 +94,3 @@ if __name__ == '__main__':
     bootstrap_filestructure()
     cdc_phil_scrape_range(1, 5)
     #test_scrape()
-
-
-
-
-#these methods are deprecated because they don't cleverly keep track of cookies
-#so they make many more http requests than necessary
-#def scrape_and_parse_everything():
-#    id=1
-#    while True:
-#        try:
-#            scrape_and_parse(id)
-#            id+=1
-#        except:
-#            break
-#def scrape_everything():
-#    id=1
-#    mkdir(RAW_HTML_DIR)    
-#    #while True:
-#    while id <= 10:
-#        try:
-#            html = cdc_phil_scrape(id)
-#            #print html
-#            store_raw_html(id, html)
-#            id+=1
-#        except:
-#            print "uh-oh. trouble getting a page."
-#            break

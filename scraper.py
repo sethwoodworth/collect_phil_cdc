@@ -42,7 +42,7 @@ def get_me_a_cookie():
 	#cj.save(COOKIEFILE)                     # save the cookies again
 	handle = urlopen(req)
 	
-	print "got a new cookie."
+	print "Fetched and stored new cookie."
 	return cj
 
 
