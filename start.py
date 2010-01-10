@@ -58,16 +58,15 @@ def cdc_phil_scrape_range(start, end):
     while current <= end:
         print str(current)
         html = cdc_phil_scrape(current, cookiejar)
+	#print html
         # if we didn't get a session error page:
-        try:
-            is_session_expired_page(html)
+	if not is_session_expired_page(html):
             store_raw_html(current, html)
             metadata = parse_img(html)
-            #FIXME: uncomment this and debug the database errors
             store_datum(metadata)
             current+=1
         # if we got a session error page:
-        except :
+	else:
             print "got a session error page.  going to grab a new cookie..."
             cookiejar = get_me_a_cookie()
 
@@ -95,7 +94,7 @@ def test_scrape():
     
 if __name__ == '__main__':
     bootstrap_filestructure()
-    cdc_phil_scrape_range(1300, 1399)
+    cdc_phil_scrape_range(1, 5)
     #test_scrape()
 
 

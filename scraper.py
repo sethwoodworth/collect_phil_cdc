@@ -45,6 +45,11 @@ def get_me_a_cookie():
 	print "got a new cookie."
 	return cj
 
+
+
+
+
+
 def cdc_phil_scrape(id, cj=get_me_a_cookie()):
 	url_to_scrape = 'http://phil.cdc.gov/phil/details.asp';
 	# this post data doesn't seem to really matter, as long as it is correctly formed
@@ -102,4 +107,4 @@ def is_session_expired_page(html):
 
 
 if __name__ == '__main__':
-	print cdc_phil_scrape(1111)
+	print cdc_phil_scrape(1)
