@@ -1,0 +1,39 @@
+cdc scraping notes:
+$ openssl req -new -key server.key -out server.csr
+
+code
+    where we are
+        parse and scrape work fine
+    where we're going
+        indexer function
+            watching the database for inserts
+            watching file downloads
+            knows how to restart if things die
+        database read
+        check_hires
+            check if we've downloaded the hires and lores versions of a file
+        smarter large-download code
+        flag that's like "list what you have"
+        flag that's like "fill in the gaps"
+        parser should be smarter about grabbing categories
+        publish to twitter
+    
+upload
+    wikicommons
+        1) pywikipediabot to upload
+        2) ability to update with new canonicalized source
+        ian will help
+    flickr commons
+        not until we're official, says seth
+        email to cdc first
+        definitealy part of the flickr commons project
+    archive.org?
+    raw dump--
+        pirate bay
+        legaltorrents
+        archive.org
+hitting up people for money--also just to let them know what we're doing
+putting up a webpage somewhere.  some sort of press release
+    name for us
+abstracting our code
+

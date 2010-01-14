@@ -57,11 +57,17 @@ def cdc_phil_scrape_range(start, end):
     cookiejar = get_me_a_cookie()
     while current <= end:
         print str(current)
-        html = cdc_phil_scrape(current, cookiejar)
+        try:
+            html = cdc_phil_scrape(current, cookiejar)
+        except:
+            print "ERROR: couldn't scrape out html for id " + str(id)
 	    #print html
         # if we didn't get a session error page:
         if not is_session_expired_page(html):
-            store_raw_html(current, html)
+            try:
+                store_raw_html(current, html)
+            except:
+                print "ERROR: couldn't store raw html for id " + str(id)
             metadata = parse_img(html)
             store_datum(metadata)
             current+=1
