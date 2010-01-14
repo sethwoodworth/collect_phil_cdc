@@ -39,6 +39,7 @@ def store_raw_html(id, html):
     mkdir(RAW_HTML_DIR + '/' + floor + '-' + ceiling)
     fp = open(RAW_HTML_DIR + '/' + floor + '-' + ceiling + '/' + idstr + '.html', 'w')
     fp.write(html)
+    fp.close()
 
 
 def store_datum(dict):
