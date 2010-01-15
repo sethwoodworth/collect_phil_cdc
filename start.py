@@ -1,5 +1,7 @@
 import urllib
 import os.path
+import sys
+import traceback
 #import urllib2
 from scraper import *
 from data_storer import *
@@ -53,29 +55,63 @@ def store_datum(dict):
 #        dl_hires_img(imgMetadata['path_to_img'], imgMetadata['id'])
 
 
+# i gave up on this..  it's messy because you also want to keep track of "current"
+# might come back to this later.  for now, fuckit
+#def try_me(func, args, error_msg):
+#    try:
+#        retval = func(*args)
+#    except:
+#        
+#    pass
+
+
 def cdc_phil_scrape_range(start, end):
     current = start
     cookiejar = get_me_a_cookie()
     while current <= end:
-        print str(current)
+    #let them know that we're starting our work on a new item
+        print "STARTING: " + str(current)
         try:
+            #1: get the html from their server
             html = cdc_phil_scrape(current, cookiejar)
         except:
-            print "ERROR: couldn't scrape out html for id " + str(id)
-	    #print html
+            print "ERROR: couldn't scrape out html for id " + str(current)
+            traceback.print_exc()
+            current+=1
+            continue
         # if we didn't get a session error page:
         if not is_session_expired_page(html):
             try:
+                #2: store their html on our server
                 store_raw_html(current, html)
             except:
-                print "ERROR: couldn't store raw html for id " + str(id)
-            metadata = parse_img(html)
-            store_datum(metadata)
+                print "ERROR: couldn't store raw html for id " + str(current)
+                current+=1
+                continue
+            try:
+                #3: parse the metadata out of their html
+                metadata = parse_img(html)
+            except:
+                print "ERROR: couldn't parse raw html for id " + str(current)
+                traceback.print_exc()
+                current+=1
+                continue
+            try:
+                #4: store the metadata in our database
+                store_datum(metadata)
+            except:
+                print "ERROR: couldn't store metadata for id " + str(current)
+                traceback.print_exc()
+                current+=1
+                continue
+            #these lines will only run if everthing went according to plan
+            print "SUCCESS: everything went according to plan for id " + str(current)
             current+=1
         # if we got a session error page
         else:
-            print "Session error. Need a new cookie..."
+            print "Session error. Getting a new cookie..."
             cookiejar = get_me_a_cookie()
+            print "done."
 
 
 # downloads a single image page, parses it, and shoves its data in the database
@@ -98,5 +134,6 @@ def test_scrape():
     
 if __name__ == '__main__':
     bootstrap_filestructure()
-    cdc_phil_scrape_range(1, 11850)
+    cdc_phil_scrape_range(5, 10)
+    #cdc_phil_scrape_range(1, 11850)
     #test_scrape()

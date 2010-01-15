@@ -3,6 +3,7 @@ import data_storer
 import time
 from datetime import datetime
 from BeautifulSoup import BeautifulSoup
+from html5lib import HTMLParser, treebuilders
 
 
 
@@ -22,7 +23,8 @@ def parse_img(html):
     access_time = datetime.today() #time.strftime("%Y-%m-%d %H:%M:%S", time.gmtime())
 
     # soupify the html
-    soup = BeautifulSoup(html)
+    parser = HTMLParser(tree=treebuilders.getTreeBuilder("beautifulsoup"))
+    soup = parser.parse(html)
     block = soup.find(cellpadding="5") # isolate the table of data with the unique cellpadding
 
     # features
@@ -66,7 +68,6 @@ def parse_img(html):
 			elif fieldName == 'Copyright Restrictions:':
 				copyright = fieldValue.string
 		except:
-			print sys.exc_info()[0]
 			print "error parsing table row. we were expecting two cells: one field with a bolded name and one field with data. rowContents were: "
 
 			print rowContents
