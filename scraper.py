@@ -105,4 +105,4 @@ def is_session_expired_page(html):
 
 
 if __name__ == '__main__':
-	print cdc_phil_scrape(6)
+	print cdc_phil_scrape(0)

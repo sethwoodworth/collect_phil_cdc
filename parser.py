@@ -83,9 +83,6 @@ def parse_img(html):
     lores_img_url = soup("h2")[0].parent("img")[0]['src']
     # the hires img url is a simple substitution from there
     path_to_img = re.sub('_lores.jpg', '.tif', lores_img_url)
-    #print t_id
-    #return Phil(t_id, desc, categories, credit, provider, source, path_to_img, is_color, creation, access_time)
-
     return {
         'id': t_id,
         'desc': desc,

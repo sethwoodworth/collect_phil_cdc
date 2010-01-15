@@ -67,7 +67,13 @@ def store_datum(dict):
 
 def cdc_phil_scrape_range(start, end):
     current = start
-    cookiejar = get_me_a_cookie()
+    try:
+        cookiejar = get_me_a_cookie()
+    except:
+        print "ERROR: WE COULDN'T EVEN GET A COOKIE"
+        traceback.print_exc()
+        return None
+    failed_indices = []
     while current <= end:
     #let them know that we're starting our work on a new item
         print "STARTING: " + str(current)
@@ -76,6 +82,7 @@ def cdc_phil_scrape_range(start, end):
             html = cdc_phil_scrape(current, cookiejar)
         except:
             print "ERROR: couldn't scrape out html for id " + str(current)
+            failed_indices.append(current)
             traceback.print_exc()
             current+=1
             continue
@@ -86,6 +93,7 @@ def cdc_phil_scrape_range(start, end):
                 store_raw_html(current, html)
             except:
                 print "ERROR: couldn't store raw html for id " + str(current)
+                failed_indices.append(current)
                 current+=1
                 continue
             try:
@@ -93,6 +101,7 @@ def cdc_phil_scrape_range(start, end):
                 metadata = parse_img(html)
             except:
                 print "ERROR: couldn't parse raw html for id " + str(current)
+                failed_indices.append(current)
                 traceback.print_exc()
                 current+=1
                 continue
@@ -101,6 +110,7 @@ def cdc_phil_scrape_range(start, end):
                 store_datum(metadata)
             except:
                 print "ERROR: couldn't store metadata for id " + str(current)
+                failed_indices.append(current)
                 traceback.print_exc()
                 current+=1
                 continue
@@ -109,9 +119,23 @@ def cdc_phil_scrape_range(start, end):
             current+=1
         # if we got a session error page
         else:
-            print "Session error. Getting a new cookie..."
-            cookiejar = get_me_a_cookie()
-            print "done."
+            times_to_try_getting_cookie = 3
+            print "SESSION error. Getting a new cookie...we'll give this " + str(times_to_try_getting_cookie) + " tries..."
+            try_num = 1
+            while try_num <= times_to_try_getting_cookie:
+                try:
+                    cookiejar = get_me_a_cookie()
+                except:
+                    print "eep, no luck. giving it another shot..."
+                    try_num+=1
+                    continue
+                #we were successful
+                print "SESSION success. got a new cookie."
+                break
+
+    print "HOLY CRAP WE ARE DONE"
+    print "Failed at " + str(len(failed_indices)) + " indices :"
+    print failed_indices
 
 
 # downloads a single image page, parses it, and shoves its data in the database
@@ -134,6 +158,6 @@ def test_scrape():
     
 if __name__ == '__main__':
     bootstrap_filestructure()
-    cdc_phil_scrape_range(5, 10)
+    cdc_phil_scrape_range(500, 530)
     #cdc_phil_scrape_range(1, 11850)
     #test_scrape()
