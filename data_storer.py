@@ -18,7 +18,7 @@ phil_table = Table('phil', metadata,
     Column('source', Text),       # Source Library - Where the image originated
     Column('url_to_hires_img', Text),  # seth: static url to hi-res images
     Column('url_to_lores_img', Text),  # seth: static url to lo-res images
-    Column('copyright', DateTime),  # Copyright Status - either "Public Domain" (free use) or Copyright Protected
+    Column('copyright', Text),  # Copyright Status - either "Public Domain" (free use) or Copyright Protected
 #   Column('is_color', Boolean),    # Color Scheme - Color or Black & White # provide, but not printed, null for now
     Column('creation', DateTime),   # Creation Date - When the object was created (photo taken, video shot, etc.)
 

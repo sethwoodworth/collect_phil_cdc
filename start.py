@@ -173,7 +173,7 @@ def test_scrape():
 if __name__ == '__main__':
     bootstrap_filestructure()
     try:
-        cdc_phil_scrape_range(500, 530)
+        cdc_phil_scrape_range(530, 540)
     except KeyboardInterrupt:
         sys.exit(0)
     #cdc_phil_scrape_range(1, 11850)

@@ -17,7 +17,7 @@ def init_dict():
         'url_to_hires_img':  '',
         'url_to_lores_img':  '',
         'copyright': '',
-        'creation': '',
+        'creation': None,
         'access_time': datetime.today()
     }
     return metadict
@@ -54,8 +54,6 @@ def parse_img(html):
                 fieldValue = rowContents('td')[1]
                 if fieldName == 'Description:':
                     if fieldValue.contents:
-                        #FIXME: i'm just flattening the html here
-                        # it's just p and b tags, i think.
                         metadict['desc'] = str(fieldValue)
                 elif fieldName == 'Content Providers(s):':
                     if fieldValue.contents:
@@ -85,7 +83,7 @@ def parse_img(html):
                         metadict['categories'] = str(fieldValue)
                 elif fieldName == 'Copyright Restrictions:':
                     if fieldValue.contents:
-                        metadict['copyright'] = fieldValue.prettify()
+                        metadict['copyright'] = str(fieldValue)
             except:
                 print "error parsing table row contents. we were expecting two cells: one field with a bolded name and one field with data. rowContents were: "
                 print repr(rowContents)
