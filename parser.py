@@ -1,7 +1,7 @@
 import re
 import time
 from datetime import datetime
-from BeautifulSoup import BeautifulSoup
+#from BeautifulSoup import BeautifulSoup
 from html5lib import HTMLParser, treebuilders
 import traceback
 
@@ -51,33 +51,39 @@ def parse_img(html):
                 # grab the text (note, there may be markup here) in the second column.  this is the field value
                 fieldValue = rowContents('td')[1]
                 if fieldName == 'Description:':
-                    #FIXME: i'm just flattening the html here
-                    # it's just p and b tags, i think.
-                    desc = str(fieldValue)
+                    if fieldValue.contents:
+                        #FIXME: i'm just flattening the html here
+                        # it's just p and b tags, i think.
+                        metadict['desc'] = str(fieldValue)
                 elif fieldName == 'Content Providers(s):':
-                    provider = fieldValue.contents[0]
+                    if fieldValue.contents:
+                        metadict['provider'] = fieldValue.contents[0]
                 elif fieldName == 'Creation Date:':
-                    #TODO: turn this into a datetime
-                    creation = datetime.strptime(fieldValue.contents[0], "%Y")
+                    if fieldValue.contents:
+                        metadict['creation'] = datetime.strptime(fieldValue.contents[0], "%Y")
                 elif fieldName == 'Photo Credit:':
-                    credit = fieldValue.contents[0]
+                    if fieldValue.contents:
+                        metadict['credit'] = fieldValue.contents[0]
                 elif fieldName == 'Links:':
-                    #make a list of tuples
-                    links_tuple_list = []
-                    links_rows = fieldValue.findAll('tr')
-                    for link_row_html in links_rows: 
-                        desc = link_row_html('td')[1].find('a').contents[0]
-                        url = link_row_html('td')[1].find('a')['href']
-                        links_tuple_list.append((desc,url))
-                    #stringify it
-                    links_tuple_list_string = str(links_tuple_list)
+                    if fieldValue.contents:
+                        #make a list of tuples
+                        links_tuple_list = []
+                        links_rows = fieldValue.findAll('tr')
+                        for link_row_html in links_rows: 
+                            desc = link_row_html('td')[1].find('a').contents[0]
+                            url = link_row_html('td')[1].find('a')['href']
+                            links_tuple_list.append((desc,url))
+                        #stringify it
+                        links_tuple_list_string = str(links_tuple_list)
+                        metadict['links'] = links_tuple_list_string
                 elif fieldName == 'Categories:':
-                    # FIXME: same as with description, except the html is more complicated.
-                    # it's probably much more important that we parse this part more carefully.  at the least, we should strip out the javascript.
-                    categories = str(fieldValue)
-                #TODO: store copyright info in the database
+                    if fieldValue.contents:
+                        # FIXME: same as with description, except the html is more complicated.
+                        # it's probably much more important that we parse this part more carefully.  at the least, we should strip out the javascript.
+                        metadict['categories'] = str(fieldValue)
                 elif fieldName == 'Copyright Restrictions:':
-                    copyright = fieldValue.contents[0]
+                    if fieldValue.contents:
+                        metadict['copyright'] = fieldValue.prettify()
             except:
                 print "error parsing table row contents. we were expecting two cells: one field with a bolded name and one field with data. rowContents were: "
                 print repr(rowContents)
@@ -95,25 +101,12 @@ def parse_img(html):
     lores_img_url = soup("h2")[0].parent("img")[0]['src']
     # the hires img url is a simple substitution from there
     hires_img_url = re.sub('_lores.jpg', '.tif', lores_img_url)
-    return {
-        'id': t_id,
-        'desc': desc,
-        'categories': categories,
-        'credit': credit,
-        #'links': links,
-        'provider': provider,
-        'source': source,
-        'copyright': copyright,
-        'creation': creation,
-        'access_time': access_time,
-    }
     return metadict
     
 def test_parse():
     f = open('./examples/10760.html')
     raw_html = f.read()
-    #print parse_img(raw_html)
-    parse_img(raw_html)
+    print repr(parse_img(raw_html))
     f.close()
 
 if __name__ == '__main__':
