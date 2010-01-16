@@ -98,9 +98,9 @@ def parse_img(html):
     # generate the hires img url
     # grabbing the lores image url:
     # note that we have to go to the original soup that we were passed in order to do this
-    lores_img_url = soup("h2")[0].parent("img")[0]['src']
+    metadict['url_to_lores_img'] = soup("h2")[0].parent("img")[0]['src']
     # the hires img url is a simple substitution from there
-    hires_img_url = re.sub('_lores.jpg', '.tif', lores_img_url)
+    metadict['url_to_hires_img'] = re.sub('_lores.jpg', '.tif', metadict['url_to_lores_img'])
     return metadict
     
 def test_parse():
