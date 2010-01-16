@@ -88,11 +88,14 @@ def parse_img(html):
         'desc': desc,
         'categories': categories,
         'credit': credit,
+        'link': link,
         'provider': provider,
         'source': source,
-        'path_to_img': path_to_img,
-        'is_color': is_color,
+        'url_to_hires_img':  url_to_hires_img,
+        'url_to_lores_img':  url_to_lores_img,
+        'copyright': copyright,
         'creation': creation,
+        'upload': upload,
         'access_time': access_time,
     }
     
