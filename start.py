@@ -26,6 +26,18 @@ def bootstrap_filestructure():
 # or maybe we should just leave it.
 # (note that running mkdir only creates the dir if it doesnt already exist)
 #TODO: the same zfill stuff we did in store_raw_html
+
+def floorify(id):
+    return id % 100
+
+def make_directories(ids):
+    floors = map(floorify, ids)
+    floors_unique = set(floors)
+    # convert the floors into strings of format like 015XX
+    floor_dirs = map((lambda dir: str(dir).zfill(5)[0:3]+"XX"), floors_unique)
+    map((lambda dirname: mkdir(HIRES_IMG_DIR + dirname)), floor_dirs)
+
+
 def dl_hires_img(hires_img_url, img_id):
     floor = id - (id%100)
     ceiling = str(floor + 100)
