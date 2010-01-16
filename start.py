@@ -69,6 +69,8 @@ def cdc_phil_scrape_range(start, end):
     current = start
     try:
         cookiejar = get_me_a_cookie()
+    except KeyboardInterrupt:
+        sys.exit(0)
     except:
         print "ERROR: WE COULDN'T EVEN GET A COOKIE"
         traceback.print_exc()
@@ -80,6 +82,8 @@ def cdc_phil_scrape_range(start, end):
         try:
             #1: get the html from their server
             html = cdc_phil_scrape(current, cookiejar)
+        except KeyboardInterrupt:
+            sys.exit(0)
         except:
             print "ERROR: couldn't scrape out html for id " + str(current)
             failed_indices.append(current)
@@ -91,6 +95,8 @@ def cdc_phil_scrape_range(start, end):
             try:
                 #2: store their html on our server
                 store_raw_html(current, html)
+            except KeyboardInterrupt:
+                sys.exit(0)
             except:
                 print "ERROR: couldn't store raw html for id " + str(current)
                 failed_indices.append(current)
@@ -99,6 +105,8 @@ def cdc_phil_scrape_range(start, end):
             try:
                 #3: parse the metadata out of their html
                 metadata = parse_img(html)
+            except KeyboardInterrupt:
+                sys.exit(0)
             except:
                 print "ERROR: couldn't parse raw html for id " + str(current)
                 failed_indices.append(current)
@@ -108,6 +116,8 @@ def cdc_phil_scrape_range(start, end):
             try:
                 #4: store the metadata in our database
                 store_datum(metadata)
+            except KeyboardInterrupt:
+                sys.exit(0)
             except:
                 print "ERROR: couldn't store metadata for id " + str(current)
                 failed_indices.append(current)
@@ -125,6 +135,8 @@ def cdc_phil_scrape_range(start, end):
             while try_num <= times_to_try_getting_cookie:
                 try:
                     cookiejar = get_me_a_cookie()
+                except KeyboardInterrupt:
+                    sys.exit(0)
                 except:
                     print "eep, no luck. giving it another shot..."
                     try_num+=1
@@ -145,6 +157,8 @@ def scrape_and_parse(id):
         metadata = parse_img(html)
         store_datum(metadata)
         # print metadata
+    except KeyboardInterrupt:
+        sys.exit(0)
     except:
         return FALSE
 
@@ -158,6 +172,9 @@ def test_scrape():
     
 if __name__ == '__main__':
     bootstrap_filestructure()
-    cdc_phil_scrape_range(500, 530)
+    try:
+        cdc_phil_scrape_range(500, 530)
+    except KeyboardInterrupt:
+        sys.exit(0)
     #cdc_phil_scrape_range(1, 11850)
     #test_scrape()

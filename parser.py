@@ -32,6 +32,8 @@ def parse_img(html):
 
     # navigate the block tree, find elements, and store them in the dict
     metadict['id'] = block.find('tr')('td')[1].contents[0] # grab the unique image id
+    print metadict['id']
+
     # shove all the rest of the rows of data into a list, organized by row
     # we do this so that we can be sure that each item in the list is a row in our table of data
     # otherwise, rows within tables that are nested within our data table (these /do/ exist) would be given separate indices in our list
