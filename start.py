@@ -25,13 +25,17 @@ def bootstrap_filestructure():
 # because we will run this function once for every single image.  easier to ie make all the directories, then assume they exist?
 # or maybe we should just leave it.
 # (note that running mkdir only creates the dir if it doesnt already exist)
-#TODO: the same zfill stuff we did in store_raw_html
-def dl_hires_img(hires_img_url, img_id):
-    floor = id - (id%100)
-    ceiling = str(floor + 100)
-    floor = str(floor)
-    mkdir(HIRES_IMG_DIR + '/' + floor + '-' + ceiling)
-    urllib.urlretrieve(hires_img_url, HIRES_IMG_DIR + '/' + floor + '-' + ceiling + '/' + img_id + '.tif')
+
+
+def get_images():
+    query = text("select id,url_to_hires_img from phil where url_to_hires_img != '';")
+    results = db.execute(query).fetchall()
+    for id_url_tuple in results:
+        id = id_url_tuple[0]
+        url = id_url_tuple[1]
+        dl_image(id, url, HIRES_IMG_DIR)
+        path = './' + HIRES_IMG_DIR + id
+        urllib.urlretrieve(url, asdf)
 
 def store_raw_html(id, html):
     idstr = str(id).zfill(5)
@@ -142,13 +146,6 @@ def cdc_phil_scrape_range(start, end):
         print failed_indices
 
 
-#for user in users:
-#    s = text("select count(*) as count from tweets where from_user = '" + user + "' " + window + ";")
-#    results = conn.execute(s).fetchall()
-#    total = []
-#    for result in results:
-#        total.append(result.count)
-
 def get_last():
     cookiejar = get_me_a_cookie()
     
@@ -175,5 +172,5 @@ if __name__ == '__main__':
     bootstrap_filestructure()
     #cdc_phil_scrape_range(1900, 1999)
 
-    cdc_phil_scrape_range(1, 11850)
+    cdc_phil_scrape_range(1, 1)
     #test_scrape()
