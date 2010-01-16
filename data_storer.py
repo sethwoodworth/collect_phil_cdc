@@ -15,15 +15,15 @@ phil_table = Table('phil', metadata,
     Column('credit', Text),       # Photo Credit - Photographer or Videographer who took the photo or shot the video
     Column('links', Text),       # seth: url to other cdc content
     Column('provider', Text),      # Content Provider - The contributor of the asset
+                                    # Source is possibly ficional, we haven't proven either way
     Column('source', Text),       # Source Library - Where the image originated
     Column('url_to_hires_img', Text),  # seth: static url to hi-res images
     Column('url_to_lores_img', Text),  # seth: static url to lo-res images
     Column('copyright', Text),  # Copyright Status - either "Public Domain" (free use) or Copyright Protected
 #   Column('is_color', Boolean),    # Color Scheme - Color or Black & White # provide, but not printed, null for now
-    Column('creation', DateTime),   # Creation Date - When the object was created (photo taken, video shot, etc.)
+    Column('creation', Text),   # Creation Date - When the object was created (photo taken, video shot, etc.)
 
     #TODO: upload exists only here, but we have the data, add it back if exists in fields
-    Column('upload', DateTime),     # Upload Date - When the image entered the PHIL database
     Column('access_time', DateTime) # seth: time/day we accessed the content
 )
 metadata.create_all(db)
@@ -46,7 +46,7 @@ class Phil(Base):
     url_to_lores_img = Column(String)
     copyright = Column(String)
 #   is_color = Column(Boolean)
-    creation = Column(Integer)
+    creation = Column(String)
     access_time = Column(Integer)
 
 

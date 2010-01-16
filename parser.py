@@ -35,7 +35,7 @@ def parse_img(html):
 
     # navigate the block tree, find elements, and store them in the dict
     metadict['id'] = block.find('tr')('td')[1].contents[0] # grab the unique image id
-    #print metadict['id']
+    metadict['url_to_lores_img'] = soup("h2")[0].parent("img")[0]['src']
 
     # shove all the rest of the rows of data into a list, organized by row
     # we do this so that we can be sure that each item in the list is a row in our table of data
@@ -63,10 +63,13 @@ def parse_img(html):
                         metadict['provider'] = fieldValue.contents[0]
                 elif fieldName == 'Creation Date:':
                     if fieldValue.contents:
-                        metadict['creation'] = datetime.strptime(fieldValue.contents[0], "%Y")
+                        metadict['creation'] = fieldValue.contents[0]
                 elif fieldName == 'Photo Credit:':
                     if fieldValue.contents:
                         metadict['credit'] = fieldValue.contents[0]
+                elif fieldName == 'High Resolution:':   
+                    if not fieldValue('a'):
+                        metadict['url_to_hires_img'] = re.sub('_lores.jpg', '.tif', metadict['url_to_lores_img'])
                 elif fieldName == 'Links:':
                     if fieldValue.contents:
                         #make a list of tuples
@@ -107,14 +110,7 @@ def parse_img(html):
             print "error parsing table row. we were expecting two cells: one field with a bolded name and one field with data. rowContents were: "
             print repr(str(rowContents))
             traceback.print_exc()
-    
-    # before we return the dict of data,
-    # generate the hires img url
-    # grabbing the lores image url:
-    # note that we have to go to the original soup that we were passed in order to do this
-    metadict['url_to_lores_img'] = soup("h2")[0].parent("img")[0]['src']
-    # the hires img url is a simple substitution from there
-    metadict['url_to_hires_img'] = re.sub('_lores.jpg', '.tif', metadict['url_to_lores_img'])
+
     return metadict
     
 def test_parse():
