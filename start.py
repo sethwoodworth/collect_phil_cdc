@@ -7,44 +7,87 @@ from scraper import *
 from data_storer import *
 from parser import *
 
+################################################################################
+#####################                                  #########################
+#####################         Release Our Data         #########################
+#####################                                  #########################
+################################################################################
 
-# store the hires images relative to the working directory
-HIRES_IMG_DIR = 'cdc-phil-imgs-hires'
+#####
+#####  A HelloSilo Project
+#####  ROD@HelloSilo.com
+#####
+
+#####
+##### Authors:
+##### Parker Phinney @gameguy43   (parker@madebyparker.com)
+##### Seth Woodworth @sethish     (seth@sethish.com)
+#####
+
+## Local configs
+## Set these as needed locally
+HIRES_IMG_DIR = 'hires'
+LORES_IMG_DIR = 'thumbs'
 RAW_HTML_DIR = 'cdc-phil-raw-html'
 
 def mkdir(dirname):
     if not os.path.isdir("./" + dirname + "/"):
         os.mkdir("./" + dirname + "/")
 
-# run this before downloading hires images
 def bootstrap_filestructure():
     mkdir(HIRES_IMG_DIR)
+    mkdir(LORES_IMG_DIR)
     mkdir(RAW_HTML_DIR)    
 
-# FIXME: in these two functions, mkdir is run, which checks whether or not a dir exists.  this is inefficient.
-# because we will run this function once for every single image.  easier to ie make all the directories, then assume they exist?
-# or maybe we should just leave it.
-# (note that running mkdir only creates the dir if it doesnt already exist)
-
 def floorify(id):
-    return id % 100
+    ## mod 100 the image id numbers to make smarter folders
+    floor = id - id % 100
+    floored = str(floor).zfill(5)[0:3]+"XX"
+    return floored
 
-def make_directories(ids):
+def make_directories(ids, root_dir):
+    ## directories for image downloads
     floors = map(floorify, ids)
-    floors_unique = set(floors)
+    floor_dirs = set(floors)
     # convert the floors into strings of format like 015XX
-    floor_dirs = map((lambda dir: str(dir).zfill(5)[0:3]+"XX"), floors_unique)
-    map((lambda dirname: mkdir(HIRES_IMG_DIR + dirname)), floor_dirs)
+    map((lambda dirname: mkdir(root_dir + '/' + dirname)), floor_dirs)
 
-def get_images():
+def get_hires_images():
     query = text("select id,url_to_hires_img from phil where url_to_hires_img != '';")
+    query = text("select phil.id,url_to_hires_img from phil join hires_status ON ( phil.id = hires_status.id ) where hires_status.hires_img_dl != 1;")
     results = db.execute(query).fetchall()
+    print results
+    # generate list of ids from results dict
+    ids = map((lambda tuple: tuple[0]), results)
+    print ids
+    make_directories(ids, HIRES_IMG_DIR)
     for id_url_tuple in results:
         id = id_url_tuple[0]
         url = id_url_tuple[1]
-        dl_image(id, url, HIRES_IMG_DIR)
-        path = './' + HIRES_IMG_DIR + id
-        urllib.urlretrieve(url, asdf)
+        path = './' + HIRES_IMG_DIR + '/' + floorify(id) + '/' + str(id).zfill(5) + '.tif'
+        urllib.urlretrieve(url, path)
+
+def get_images(root_dir, db_column_name, flag_table):
+    ## takes: a directory global, url_to? from phil table, an image status table
+    ## returns: images to folder structure and stores downloaded status table
+    query = text("select phil.id," + db_column_name + " from phil join " + flag_table + " ON ( phil.id = " + flag_table + ".id ) where " + flag_table + ".status != '1';")
+    results = db.execute(query).fetchall()
+    # generate list of ids from results dict
+    ids = map((lambda tuple: tuple[0]), results)
+    print ids
+    make_directories(ids, root_dir)
+    for id_url_tuple in results:
+        id = id_url_tuple[0]
+        url = id_url_tuple[1]
+        path = './' + root_dir + '/' + floorify(id) + '/' + str(id).zfill(5) + url[-4:]
+        urllib.urlretrieve(url, path)
+        s = text('REPLACE INTO ' + flag_table + ' (id,status) values (' + id + ',1);')
+        db.execute(s)
+        
+
+def test():
+    get_images(LORES_IMG_DIR, 'url_to_lores_img', 'lores_status')
+    #get_images(HIRES_IMG_DIR, 'url_to_hires_img')
 
 class ImgDownloader(threading.Thread):
     def __init__(self, queue):
@@ -65,6 +108,7 @@ class ImgDownloader(threading.Thread):
             self.queue.task_done()
 
 def store_raw_html(id, html):
+    ## stores an html dump from the scraping process, just in case
     idstr = str(id).zfill(5)
     floor = id - (id%100)
     ceiling = str(floor + 100).zfill(5)
@@ -76,18 +120,13 @@ def store_raw_html(id, html):
 
 
 def store_datum(dict):
+    ## stores scraped metadata into phil table
+    # TODO: incorporate this into main function
+    # TODO: 'table' is a db storage object so isn't descriptive
     table.execute(dict)
 
-#def dl_all_hires_imgs():
-#    #TODO: write this function (the next line is pseudocode)    
-#    # FIXME: ok, this /pretty much/ works, but I think I want two loops, 
-#    # for different folders and a lot of error handling for big files
-#    for img_path in session.query(Phil).filter("id<224").order_by("id").all():
-#        dl_hires_img(imgMetadata['path_to_img'], imgMetadata['id'])
-
-
-
 def cdc_phil_scrape_range(start, end):
+    ## main glue function
     current = start
     try:
         cookiejar = get_me_a_cookie()
@@ -99,10 +138,9 @@ def cdc_phil_scrape_range(start, end):
         return None
     failed_indices = []
     while current <= end:
-    #let them know that we're starting our work on a new item
         print "STARTING: " + str(current)
         try:
-            #1: get the html from their server
+            # 1: fetching html of id, for store and parse
             html = cdc_phil_scrape(current, cookiejar)
         except KeyboardInterrupt:
             sys.exit(0)
@@ -115,7 +153,7 @@ def cdc_phil_scrape_range(start, end):
         # if we didn't get a session error page:
         if not is_session_expired_page(html):
             try:
-                #2: store their html on our server
+                # 2: write html to disk
                 store_raw_html(current, html)
             except KeyboardInterrupt:
                 sys.exit(0)
@@ -125,7 +163,7 @@ def cdc_phil_scrape_range(start, end):
                 current+=1
                 continue
             try:
-                #3: parse the metadata out of their html
+                # 3: parse the metadata out of their html
                 metadata = parse_img(html)
             except KeyboardInterrupt:
                 sys.exit(0)
@@ -136,7 +174,6 @@ def cdc_phil_scrape_range(start, end):
                 current+=1
                 continue
             try:
-                #4: store the metadata in our database
                 store_datum(metadata)
             except KeyboardInterrupt:
                 sys.exit(0)
@@ -146,10 +183,10 @@ def cdc_phil_scrape_range(start, end):
                 traceback.print_exc()
                 current+=1
                 continue
-            #these lines will only run if everthing went according to plan
+            # These lines will only run if everthing went according to plan
             print "SUCCESS: everything went according to plan for id " + str(current)
             current+=1
-        # if we got a session error page
+        # but if we got a session error page
         else:
             times_to_try_getting_cookie = 3
             print "SESSION error. Getting a new cookie...we'll give this " + str(times_to_try_getting_cookie) + " tries..."
@@ -163,7 +200,7 @@ def cdc_phil_scrape_range(start, end):
                     print "eep, no luck. giving it another shot..."
                     try_num+=1
                     continue
-                #we were successful
+                # refreshed cookie, returning to loop
                 print "SESSION success. got a new cookie."
                 break
 
@@ -173,20 +210,14 @@ def cdc_phil_scrape_range(start, end):
         print failed_indices
 
 
-def get_last():
-    cookiejar = get_me_a_cookie()
-    
-    print stuff
-    return last
-
-#def check_start(start, end):
-#    if start < end:
-#        print "choosing a higher end than start, range fail"
-#    else:
-#        continue
+def check_start(start, end):
+    if start < end:
+        print "choosing a higher end than start, range fail"
+    else:
+        break
 
 def check_latest(start):
-    check_start
+    check_start(start)
     query = text("select id from phil order by id desc limit 1;")
     results = int(table.execute(query).fetchall())
     if results > start:
@@ -197,7 +228,5 @@ def check_latest(start):
 
 if __name__ == '__main__':
     bootstrap_filestructure()
-    #cdc_phil_scrape_range(1900, 1999)
-
-    cdc_phil_scrape_range(1, 1)
-    #test_scrape()
+    #cdc_phil_scrape_range(1, 11850)
+    test()
