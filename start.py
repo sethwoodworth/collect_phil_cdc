@@ -1,6 +1,7 @@
 import urllib
 import os.path
 import sys
+import threading
 import traceback
 #import urllib2
 from scraper import *
@@ -52,26 +53,20 @@ def make_directories(ids, root_dir):
     # convert the floors into strings of format like 015XX
     map((lambda dirname: mkdir(root_dir + '/' + dirname)), floor_dirs)
 
-def get_hires_images():
-    query = text("select id,url_to_hires_img from phil where url_to_hires_img != '';")
-    query = text("select phil.id,url_to_hires_img from phil join hires_status ON ( phil.id = hires_status.id ) where hires_status.hires_img_dl != 1;")
-    results = db.execute(query).fetchall()
-    print results
-    # generate list of ids from results dict
-    ids = map((lambda tuple: tuple[0]), results)
-    print ids
-    make_directories(ids, HIRES_IMG_DIR)
-    for id_url_tuple in results:
-        id = id_url_tuple[0]
-        url = id_url_tuple[1]
-        path = './' + HIRES_IMG_DIR + '/' + floorify(id) + '/' + str(id).zfill(5) + '.tif'
-        urllib.urlretrieve(url, path)
+#    query = text("select id,url_to_hires_img from phil where url_to_hires_img != '';")
+#    query = text("select phil.id,url_to_hires_img from phil join hires_status ON ( phil.id = hires_status.id ) where hires_status.hires_img_dl != 1;")
+#    query = text("select phil.id," + db_column_name + " from phil join " + flag_table + " ON ( phil.id = " + flag_table + ".id ) where " + flag_table + ".status != '1';")
 
 def get_images(root_dir, db_column_name, flag_table):
     ## takes: a directory global, url_to? from phil table, an image status table
     ## returns: images to folder structure and stores downloaded status table
-    query = text("select phil.id," + db_column_name + " from phil join " + flag_table + " ON ( phil.id = " + flag_table + ".id ) where " + flag_table + ".status != '1';")
-    results = db.execute(query).fetchall()
+    query = text("select id," + db_column_name + " from phil where " + db_column_name + "  IS NOT null;")
+    ids_and_urls = db.execute(query).fetchall()
+    print ids_and_urls
+    query = text("select id from " + flag_table + " where status != '1';")
+    ids_to_remove = db.execute(query).fetchall()
+    print ids_to_remove
+
     # generate list of ids from results dict
     ids = map((lambda tuple: tuple[0]), results)
     print ids
@@ -214,7 +209,7 @@ def check_start(start, end):
     if start < end:
         print "choosing a higher end than start, range fail"
     else:
-        break
+        print "arg"
 
 def check_latest(start):
     check_start(start)
