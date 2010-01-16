@@ -57,7 +57,7 @@ def parse_img(html):
                 fieldValue = rowContents('td')[1]
                 if fieldName == 'Description:':
                     if fieldValue.contents:
-                        metadict['desc'] = str(fieldValue)
+                        metadict['desc'] = unicode(repr(str(fieldValue)))
                 elif fieldName == 'Content Providers(s):':
                     if fieldValue.contents:
                         metadict['provider'] = fieldValue.contents[0]
@@ -77,7 +77,7 @@ def parse_img(html):
                             url = link_row_html('td')[1].find('a')['href']
                             links_tuple_list.append((desc,url))
                         #stringify it
-                        links_tuple_list_string = str(links_tuple_list)
+                        links_tuple_list_string = unicode(repr(str(links_tuple_list)))
                         metadict['links'] = links_tuple_list_string
                 elif fieldName == 'Categories:':
                     if fieldValue.contents:
@@ -93,19 +93,19 @@ def parse_img(html):
                                 indentation = len(cells) - 1
                                 tagname = cells[len(cells)-1].find('a').contents[0]
                                 tag_str = tag_str + "\n" +  str(indentation) + " " + tagname
-                        metadict['categories'] = tag_str
+                        metadict['categories'] = unicode(repr(tag_str))
 
                 elif fieldName == 'Copyright Restrictions:':
                     if fieldValue.contents:
-                        metadict['copyright'] = str(fieldValue)
+                        metadict['copyright'] = unicode(repr(str(fieldValue)))
             except:
                 print "error parsing table row contents. we were expecting two cells: one field with a bolded name and one field with data. rowContents were: "
-                print repr(rowContents)
+                print repr(str(rowContents))
                 traceback.print_exc()
 
         except:
             print "error parsing table row. we were expecting two cells: one field with a bolded name and one field with data. rowContents were: "
-            print repr(rowContents)
+            print repr(str(rowContents))
             traceback.print_exc()
     
     # before we return the dict of data,
