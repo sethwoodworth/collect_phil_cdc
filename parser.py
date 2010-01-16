@@ -1,9 +1,9 @@
 import re
-import data_storer
 import time
 from datetime import datetime
 from BeautifulSoup import BeautifulSoup
 from html5lib import HTMLParser, treebuilders
+import traceback
 
 
 
@@ -61,10 +61,17 @@ def parse_img(html):
                 elif fieldName == 'Photo Credit:':
                     credit = fieldValue.contents[0]
                 elif fieldName == 'Links:':
-                    links_html = fieldValue.contents[0]
-                    print links_html
                     #make a list of tuples
+                    links_tuple_list = []
+                    links_rows = fieldValue.findAll('tr')
+                    #print links_rows
+                    print "hi"
+                    for link_row_html in links_rows: 
+                        desc = link_row_html('td')[1].find('a').contents[0]
+                        url = link_row_html('td')[1].find('a')['href']
+                        links_tuple_list.append((desc,url))
                     #stringify it
+                    links_tuple_list_string = str(links_tuple_list)
                 elif fieldName == 'Categories:':
                     # FIXME: same as with description, except the html is more complicated.
                     # it's probably much more important that we parse this part more carefully.  at the least, we should strip out the javascript.
@@ -74,11 +81,13 @@ def parse_img(html):
                     copyright = fieldValue.contents[0]
             except:
                 print "error parsing table row contents. we were expecting two cells: one field with a bolded name and one field with data. rowContents were: "
-                print rowContents
+                print repr(rowContents)
+                traceback.print_exc()
 
         except:
             print "error parsing table row. we were expecting two cells: one field with a bolded name and one field with data. rowContents were: "
-            print rowContents
+            print repr(rowContents)
+            traceback.print_exc()
     
     # before we return the dict of data,
     # generate the hires img url
@@ -92,19 +101,16 @@ def parse_img(html):
         'desc': desc,
         'categories': categories,
         'credit': credit,
-        'links': links,
+        #'links': links,
         'provider': provider,
         'source': source,
-        'url_to_hires_img':  url_to_hires_img,
-        'url_to_lores_img':  url_to_lores_img,
         'copyright': copyright,
         'creation': creation,
-        'upload': upload,
         'access_time': access_time,
     }
     
 def test_parse():
-    f = open('./examples/1112.html')
+    f = open('./examples/10760.html')
     raw_html = f.read()
     #print parse_img(raw_html)
     parse_img(raw_html)
