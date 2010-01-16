@@ -9,7 +9,8 @@ from parser import *
 
 
 # store the hires images relative to the working directory
-HIRES_IMG_DIR = 'cdc-phil-imgs-hires'
+HIRES_IMG_DIR = 'hires'
+LORES_IMG_DIR = 'thumbs'
 RAW_HTML_DIR = 'cdc-phil-raw-html'
 
 def mkdir(dirname):
@@ -19,32 +20,60 @@ def mkdir(dirname):
 # run this before downloading hires images
 def bootstrap_filestructure():
     mkdir(HIRES_IMG_DIR)
+    mkdir(LORES_IMG_DIR)
     mkdir(RAW_HTML_DIR)    
 
 # FIXME: in these two functions, mkdir is run, which checks whether or not a dir exists.  this is inefficient.
 # because we will run this function once for every single image.  easier to ie make all the directories, then assume they exist?
 # or maybe we should just leave it.
 # (note that running mkdir only creates the dir if it doesnt already exist)
-
 def floorify(id):
-    return id % 100
+    floor = id - id % 100
+    floored = str(floor).zfill(5)[0:3]+"XX"
+    return floored
 
-def make_directories(ids):
+def make_directories(ids, root_dir):
     floors = map(floorify, ids)
-    floors_unique = set(floors)
+    floor_dirs = set(floors)
     # convert the floors into strings of format like 015XX
-    floor_dirs = map((lambda dir: str(dir).zfill(5)[0:3]+"XX"), floors_unique)
-    map((lambda dirname: mkdir(HIRES_IMG_DIR + dirname)), floor_dirs)
+    map((lambda dirname: mkdir(root_dir + '/' + dirname)), floor_dirs)
 
-def get_images():
+def get_hires_images():
     query = text("select id,url_to_hires_img from phil where url_to_hires_img != '';")
+    query = text("select phil.id,url_to_hires_img from phil join hires_status ON ( phil.id = hires_status.id ) where hires_status.hires_img_dl != 1;")
     results = db.execute(query).fetchall()
+    print results
+    # generate list of ids from results dict
+    ids = map((lambda tuple: tuple[0]), results)
+    print ids
+    make_directories(ids, HIRES_IMG_DIR)
     for id_url_tuple in results:
         id = id_url_tuple[0]
         url = id_url_tuple[1]
-        dl_image(id, url, HIRES_IMG_DIR)
-        path = './' + HIRES_IMG_DIR + id
-        urllib.urlretrieve(url, asdf)
+        path = './' + HIRES_IMG_DIR + '/' + floorify(id) + '/' + str(id).zfill(5) + '.tif'
+        urllib.urlretrieve(url, path)
+
+def get_images(root_dir, db_column_name, flag_table):
+    query = text("select phil.id," + db_column_name + " from phil join " + flag_table + " ON ( phil.id = " + flag_table + ".id ) where " + flag_table + ".status != '1';")
+    print query
+    results = db.execute(query).fetchall()
+    print results
+    # generate list of ids from results dict
+    ids = map((lambda tuple: tuple[0]), results)
+    print ids
+    make_directories(ids, root_dir)
+    for id_url_tuple in results:
+        id = id_url_tuple[0]
+        url = id_url_tuple[1]
+        path = './' + root_dir + '/' + floorify(id) + '/' + str(id).zfill(5) + url[-4:]
+        urllib.urlretrieve(url, path)
+        s = text('REPLACE INTO ' + flag_table + ' (id,status) values (' + id + ',1);')
+        db.execute(s)
+        
+
+def test():
+    get_images(LORES_IMG_DIR, 'url_to_lores_img', 'lores_status')
+    #get_images(HIRES_IMG_DIR, 'url_to_hires_img')
 
 def store_raw_html(id, html):
     idstr = str(id).zfill(5)
@@ -180,6 +209,6 @@ def check_latest(start):
 if __name__ == '__main__':
     bootstrap_filestructure()
     #cdc_phil_scrape_range(1900, 1999)
-
-    cdc_phil_scrape_range(1, 1)
+    test()
+    #cdc_phil_scrape_range(1, 1)
     #test_scrape()
