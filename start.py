@@ -26,6 +26,15 @@ def bootstrap_filestructure():
 # or maybe we should just leave it.
 # (note that running mkdir only creates the dir if it doesnt already exist)
 
+def floorify(id):
+    return id % 100
+
+def make_directories(ids):
+    floors = map(floorify, ids)
+    floors_unique = set(floors)
+    # convert the floors into strings of format like 015XX
+    floor_dirs = map((lambda dir: str(dir).zfill(5)[0:3]+"XX"), floors_unique)
+    map((lambda dirname: mkdir(HIRES_IMG_DIR + dirname)), floor_dirs)
 
 def get_images():
     query = text("select id,url_to_hires_img from phil where url_to_hires_img != '';")
