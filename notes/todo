@@ -14,6 +14,9 @@ running analytics on the data so we have some stuff for the site/press release
 emails/phone calls asking for sponsorship
 press release, website domain name
     write the press release and stuff now, but sit on it until we can try to get some sponsorships
+clean up the code:
+    better commenting.  better var names.  
+    WRITE A README
 code to step through the db and see where we have holes.
     also through the file structure
 code to take our list of things that failed before, and make sure that they're all empty things.
