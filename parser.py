@@ -22,21 +22,18 @@ def init_dict():
     }
     return metadict
 
-def blockify(html):
+def parse_img(html):
+    metadict = init_dict()
     # soupify the html
     parser = HTMLParser(tree=treebuilders.getTreeBuilder("beautifulsoup"))
     soup = parser.parse(html)
     #soup = BeautifulSoup(html)
     block = soup.find(cellpadding="5") # isolate the table of data with the unique cellpadding
-    return block
-
-def parse_img(html):
-    metadict = init_dict()
-    block = blockify(html)
 
     # navigate the block tree, find elements, and store them in the dict
     metadict['id'] = block.find('tr')('td')[1].contents[0] # grab the unique image id
     print metadict['id']
+
     # shove all the rest of the rows of data into a list, organized by row
     # we do this so that we can be sure that each item in the list is a row in our table of data
     # otherwise, rows within tables that are nested within our data table (these /do/ exist) would be given separate indices in our list
@@ -70,8 +67,6 @@ def parse_img(html):
                     #make a list of tuples
                     links_tuple_list = []
                     links_rows = fieldValue.findAll('tr')
-                    #print links_rows
-                    print "hi"
                     for link_row_html in links_rows: 
                         desc = link_row_html('td')[1].find('a').contents[0]
                         url = link_row_html('td')[1].find('a')['href']
