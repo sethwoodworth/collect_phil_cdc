@@ -13,11 +13,15 @@ phil_table = Table('phil', metadata,
     Column('desc', Text),         # Description - Extensive and authoritative explanation of the visual image or video file
     Column('categories', Text),   # Categories - used to describe the image
     Column('credit', Text),       # Photo Credit - Photographer or Videographer who took the photo or shot the video
+    Column('links', Text),       # seth: url to other cdc content
     Column('provider', Text),      # Content Provider - The contributor of the asset
     Column('source', Text),       # Source Library - Where the image originated
-    Column('path_to_img', Text),  # seth: static url to hi-res images
-    Column('is_color', Boolean),    # Color Scheme - Color or Black & White
+    Column('url_to_hires_img', Text),  # seth: static url to hi-res images
+    Column('url_to_lores_img', Text),  # seth: static url to lo-res images
+    Column('copyright', DateTime),  # Copyright Status – either "Public Domain" (free use) or Copyright Protected
+#   Column('is_color', Boolean),    # Color Scheme - Color or Black & White # provide, but not printed, null for now
     Column('creation', DateTime),   # Creation Date - When the object was created (photo taken, video shot, etc.)
+
     #TODO: upload exists only here, but we have the data, add it back if exists in fields
     Column('upload', DateTime),     # Upload Date - When the image entered the PHIL database
     Column('access_time', DateTime) # seth: time/day we accessed the content
@@ -35,29 +39,34 @@ class Phil(Base):
     desc = Column(String)
     categories = Column(String)
     credit = Column(String)
+    links = Column(String)
     provider = Column(String)
     source = Column(String)
-    path_to_img = Column(String)
-    is_color = Column(Boolean)
+    url_to_hires_img = Column(String)
+    url_to_lores_img = Column(String)
+    copyright = Column(String)
+#   is_color = Column(Boolean)
     creation = Column(Integer)
     access_time = Column(Integer)
 
 
-    def __init__(self, id, desc, categories, credit, provider, source, path_to_img, is_color, creation, access_time):
+    def __init__(self, id, desc, categories, credit, links, provider, source, url_to_hires_img, url_to_lores_img, copyright, creation, access_time):
         self.id = id
         self.desc = desc
         self.categories = categories
         self.credit = credit
+        self.links = links
         self.provider = provider
         self.source = source
-        self.path_to_img = path_to_img
-        self.is_color = is_color
+        self.url_to_hires_img = url_to_hires_img
+        self.url_to_lores_img = url_to_lores_img
+        self.copyright = copyright
         self.creation = creation
         self.access_time = access_time
 
 
     def __repr__(self):
-        return "<Phil('%s','%s','%s','%s','%s','%s','%s','%s','%s','%s')>" % (self.id, self.desc, self.categories, self.credit, self.provider, self.source, self.path_to_img, self.is_color, self.creation, self.access_time)
+        return "<Phil('%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s',)>" % (self.id, self.desc, self.categories, self.credit, self.links, self.provider, self.source, self.url_to_hires_img, self.url_to_lores_img, self.copyright, self.creation, self.upload, self.access_time)
 
 Session = sessionmaker(bind=db)
 session = Session()

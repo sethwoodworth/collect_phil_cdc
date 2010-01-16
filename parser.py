@@ -92,14 +92,15 @@ def parse_img(html):
         'desc': desc,
         'categories': categories,
         'credit': credit,
+        'links': links,
         'provider': provider,
         'source': source,
-        #'is_color': is_color,
-        'creation': creation,
-        'access_time': access_time,
+        'url_to_hires_img':  url_to_hires_img,
+        'url_to_lores_img':  url_to_lores_img,
         'copyright': copyright,
-        'lores_img_url': lores_img_url,
-        'hires_img_url': hires_img_url,
+        'creation': creation,
+        'upload': upload,
+        'access_time': access_time,
     }
     
 def test_parse():
