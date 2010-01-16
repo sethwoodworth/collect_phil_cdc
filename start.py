@@ -52,42 +52,9 @@ def make_directories(ids, root_dir):
     # convert the floors into strings of format like 015XX
     map((lambda dirname: mkdir(root_dir + '/' + dirname)), floor_dirs)
 
-def get_hires_images():
-    query = text("select id,url_to_hires_img from phil where url_to_hires_img != '';")
-    query = text("select phil.id,url_to_hires_img from phil join hires_status ON ( phil.id = hires_status.id ) where hires_status.hires_img_dl != 1;")
-    results = db.execute(query).fetchall()
-    print results
-    # generate list of ids from results dict
-    ids = map((lambda tuple: tuple[0]), results)
-    print ids
-    make_directories(ids, HIRES_IMG_DIR)
-    for id_url_tuple in results:
-        id = id_url_tuple[0]
-        url = id_url_tuple[1]
-        path = './' + HIRES_IMG_DIR + '/' + floorify(id) + '/' + str(id).zfill(5) + '.tif'
-        urllib.urlretrieve(url, path)
 
-def get_images(root_dir, db_column_name, flag_table):
-    ## takes: a directory global, url_to? from phil table, an image status table
-    ## returns: images to folder structure and stores downloaded status table
-    query = text("select phil.id," + db_column_name + " from phil join " + flag_table + " ON ( phil.id = " + flag_table + ".id ) where " + flag_table + ".status != '1';")
-    results = db.execute(query).fetchall()
-    # generate list of ids from results dict
-    ids = map((lambda tuple: tuple[0]), results)
-    print ids
-    make_directories(ids, root_dir)
-    for id_url_tuple in results:
-        id = id_url_tuple[0]
-        url = id_url_tuple[1]
-        path = './' + root_dir + '/' + floorify(id) + '/' + str(id).zfill(5) + url[-4:]
-        urllib.urlretrieve(url, path)
-        s = text('REPLACE INTO ' + flag_table + ' (id,status) values (' + id + ',1);')
-        db.execute(s)
-        
-
-def test():
-    get_images(LORES_IMG_DIR, 'url_to_lores_img', 'lores_status')
-    #get_images(HIRES_IMG_DIR, 'url_to_hires_img')
+# hug thanks to http://www.ibm.com/developerworks/aix/library/au-threadingpython/
+# this threading code is mostly from there
 
 class ImgDownloader(threading.Thread):
     def __init__(self, queue):
@@ -96,16 +63,48 @@ class ImgDownloader(threading.Thread):
 
     def run(self):
         while True:
-            #grabs url from queue
-            host = self.queue.get()
-
-
-            #grabs urls of hosts and prints first 1024 bytes of page
-            url = urllib2.urlopen(host)
-            print url.read(1)
-
+            #grabs url/id tuple from queue
+            id_url_tuple = self.queue.get()
+            id = id_url_tuple[0]
+            url = id_url_tuple[1]
+            path = './' + root_dir + '/' + floorify(id) + '/' + str(id).zfill(5) + url[-4:]
+            urllib.urlretrieve(url, path)
+            s = text('REPLACE INTO ' + flag_table + ' (id,status) values (' + id + ',1);')
+            db.execute(s)
             #signals to queue job is done
             self.queue.task_done()
+
+MAX_DAEMONS = 5
+
+def get_images(root_dir, db_column_name, flag_table):
+    ## takes: a directory global, url_to? from phil table, an image status table
+    ## returns: images to folder structure and stores downloaded status table
+    queue = Queue.Queue()
+    #MAKE OUR THREADZZZ
+    for i in range(max_daemons):
+        t = ImgDownloader(queue)
+        t.setDaemon(True)
+        t.start()
+
+    #populate queue with data
+    query = text("select phil.id," + db_column_name + " from phil join " + flag_table + " ON ( phil.id = " + flag_table + ".id ) where " + flag_table + ".status != '1';")
+    results = db.execute(query).fetchall()
+    # generate list of ids from results dict
+    ids = map((lambda tuple: tuple[0]), results)
+    print ids
+    #bootstrap our file structure for our download
+    make_directories(ids, root_dir)
+    #enqueue all the results
+    map((lambda id_url_tuple:queue.put(id_url_tuple)), results)
+
+    #wait on the queue until everything has been processed     
+    queue.join()
+        
+
+def test():
+    get_images(LORES_IMG_DIR, 'url_to_lores_img', 'lores_status')
+    #get_images(HIRES_IMG_DIR, 'url_to_hires_img')
+
 
 def store_raw_html(id, html):
     ## stores an html dump from the scraping process, just in case
