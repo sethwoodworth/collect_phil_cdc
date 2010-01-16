@@ -173,8 +173,7 @@ def check_latest(start):
 
 if __name__ == '__main__':
     bootstrap_filestructure()
-    cdc_phil_scrape_range(1900, 1999)
+    #cdc_phil_scrape_range(1900, 1999)
 
-    #cdc_phil_scrape_range(argv[0], argv[1])
-    #cdc_phil_scrape_range(1, 11850)
+    cdc_phil_scrape_range(1, 11850)
     #test_scrape()
