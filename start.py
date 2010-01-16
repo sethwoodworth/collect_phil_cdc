@@ -149,17 +149,32 @@ def cdc_phil_scrape_range(start, end):
 #    for result in results:
 #        total.append(result.count)
 
-def grab_next(start, end):
-    current = check_start()
-
-def check_start(start):
-    s = text("SELECT id FROM phil")
-    return higher_start
-
+def get_last():
+    cookiejar = get_me_a_cookie()
     
+    print stuff
+    return last
+
+#def check_start(start, end):
+#    if start < end:
+#        print "choosing a higher end than start, range fail"
+#    else:
+#        continue
+
+def check_latest(start):
+    check_start
+    query = text("select id from phil order by id desc limit 1;")
+    results = int(table.execute(query).fetchall())
+    if results > start:
+        return results
+    else:
+        return start
+
+
 if __name__ == '__main__':
     bootstrap_filestructure()
     cdc_phil_scrape_range(1530, 1535)
 
+    #cdc_phil_scrape_range(argv[0], argv[1])
     #cdc_phil_scrape_range(1, 11850)
     #test_scrape()
