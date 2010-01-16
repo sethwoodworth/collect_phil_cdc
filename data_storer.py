@@ -26,6 +26,17 @@ phil_table = Table('phil', metadata,
     #TODO: upload exists only here, but we have the data, add it back if exists in fields
     Column('access_time', DateTime) # seth: time/day we accessed the content
 )
+
+hires_status_table = Table('hires_status', metadata,
+    Column('id', Integer, primary_key=True),
+    Column('status', Boolean)
+)
+
+lores_status_table = Table('lores_status', metadata,
+    Column('id', Integer, primary_key=True),
+    Column('status', Boolean),
+)
+
 metadata.create_all(db)
 
 
