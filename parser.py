@@ -68,7 +68,7 @@ def parse_img(html):
                     if fieldValue.contents:
                         metadict['credit'] = fieldValue.contents[0]
                 elif fieldName == 'High Resolution:':   
-                    if not fieldValue('a'):
+                    if fieldValue('a'):
                         metadict['url_to_hires_img'] = re.sub('_lores.jpg', '.tif', metadict['url_to_lores_img'])
                 elif fieldName == 'Links:':
                     if fieldValue.contents:
