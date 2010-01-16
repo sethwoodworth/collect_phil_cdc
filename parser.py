@@ -5,31 +5,37 @@ from datetime import datetime
 from BeautifulSoup import BeautifulSoup
 from html5lib import HTMLParser, treebuilders
 
+def init_dict():
+    metadict = {
+        'id': '',
+        'desc': '',
+        'categories': '',
+        'credit': '',
+        'links': '',
+        'provider': '',
+        'source': '',
+        'url_to_hires_img':  '',
+        'url_to_lores_img':  '',
+        'copyright': '',
+        'creation': '',
+        'access_time': datetime.today()
+    }
+    return metadict
 
-
-def parse_img(html):
-    # declare default values
-    #t_id = 0
-    path_to_img = ''
-    desc = ''
-    categories = ''
-    credit = ''
-    provider = ''
-    source = ''
-    is_color = 'True'
-    creation = None
-    #upload
-    copyright = ''
-    access_time = datetime.today() #time.strftime("%Y-%m-%d %H:%M:%S", time.gmtime())
-
+def blockify(html):
     # soupify the html
     parser = HTMLParser(tree=treebuilders.getTreeBuilder("beautifulsoup"))
     soup = parser.parse(html)
     #soup = BeautifulSoup(html)
     block = soup.find(cellpadding="5") # isolate the table of data with the unique cellpadding
+    return block
 
-    # features
-    t_id = block.find('tr')('td')[1].contents[0] # grab the image id
+def parse_img(html):
+    metadict = init_dict()
+    block = blockify(html)
+
+    # navigate the block tree, find elements, and store them in the dict
+    metadict['id'] = block.find('tr')('td')[1].contents[0] # grab the unique image id
     print t_id
     # shove all the rest of the rows of data into a list, organized by row
     # we do this so that we can be sure that each item in the list is a row in our table of data
@@ -99,9 +105,9 @@ def parse_img(html):
         'url_to_lores_img':  url_to_lores_img,
         'copyright': copyright,
         'creation': creation,
-        'upload': upload,
         'access_time': access_time,
     }
+    return metadict
     
 def test_parse():
     f = open('./examples/1112.html')
