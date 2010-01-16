@@ -158,7 +158,7 @@ def check_start(start):
     
 if __name__ == '__main__':
     bootstrap_filestructure()
-    cdc_phil_scrape_range(500, 530)
+    cdc_phil_scrape_range(530, 540)
 
     #cdc_phil_scrape_range(1, 11850)
     #test_scrape()
