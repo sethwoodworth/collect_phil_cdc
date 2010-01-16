@@ -137,8 +137,9 @@ def cdc_phil_scrape_range(start, end):
                 break
 
     print "HOLY CRAP WE ARE DONE"
-    print "Failed at " + str(len(failed_indices)) + " indices :"
-    print failed_indices
+    if not len(failed_indices) == 0:
+        print "Failed at " + str(len(failed_indices)) + " indices :"
+        print failed_indices
 
 
 #for user in users:
@@ -158,7 +159,7 @@ def check_start(start):
     
 if __name__ == '__main__':
     bootstrap_filestructure()
-    cdc_phil_scrape_range(530, 540)
+    cdc_phil_scrape_range(1530, 1535)
 
     #cdc_phil_scrape_range(1, 11850)
     #test_scrape()
