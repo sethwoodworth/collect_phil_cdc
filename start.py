@@ -55,15 +55,6 @@ def store_datum(dict):
 #        dl_hires_img(imgMetadata['path_to_img'], imgMetadata['id'])
 
 
-# i gave up on this..  it's messy because you also want to keep track of "current"
-# might come back to this later.  for now, fuckit
-#def try_me(func, args, error_msg):
-#    try:
-#        retval = func(*args)
-#    except:
-#        
-#    pass
-
 
 def cdc_phil_scrape_range(start, end):
     current = start
@@ -150,31 +141,24 @@ def cdc_phil_scrape_range(start, end):
     print failed_indices
 
 
-# downloads a single image page, parses it, and shoves its data in the database
-def scrape_and_parse(id):
-    try:
-        html = cdc_phil_scrape(id)
-        metadata = parse_img(html)
-        store_datum(metadata)
-        # print metadata
-    except KeyboardInterrupt:
-        sys.exit(0)
-    except:
-        return FALSE
+#for user in users:
+#    s = text("select count(*) as count from tweets where from_user = '" + user + "' " + window + ";")
+#    results = conn.execute(s).fetchall()
+#    total = []
+#    for result in results:
+#        total.append(result.count)
 
+def grab_next(start, end):
+    current = check_start()
 
-def test_scrape():
-    html = cdc_phil_scrape(1)
-    metadata = parse_img(html)
-    #print metadata[:10]
-    store_datum(metadata)
+def check_start(start):
+    s = text("SELECT id FROM phil")
+    return higher_start
 
     
 if __name__ == '__main__':
     bootstrap_filestructure()
-    try:
-        cdc_phil_scrape_range(500, 530)
-    except KeyboardInterrupt:
-        sys.exit(0)
+    cdc_phil_scrape_range(500, 530)
+
     #cdc_phil_scrape_range(1, 11850)
     #test_scrape()
