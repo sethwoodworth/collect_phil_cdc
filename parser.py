@@ -78,9 +78,20 @@ def parse_img(html):
                         metadict['links'] = links_tuple_list_string
                 elif fieldName == 'Categories:':
                     if fieldValue.contents:
-                        # FIXME: same as with description, except the html is more complicated.
-                        # it's probably much more important that we parse this part more carefully.  at the least, we should strip out the javascript.
-                        metadict['categories'] = str(fieldValue)
+                        tag_str = ''
+                        metatags = fieldValue.find('table').findNextSiblings('table')
+                        metatags.insert(0, fieldValue.find('table'))
+                        for metatag in metatags:
+                            metatag_name = metatag.find('td').contents[0]
+                            tag_str = tag_str + "\n0 " + metatag_name
+                            rows = metatag.findAll('table')
+                            for row in rows:
+                                cells = row.findAll('td')
+                                indentation = len(cells) - 1
+                                tagname = cells[len(cells)-1].find('a').contents[0]
+                                tag_str = tag_str + "\n" +  str(indentation) + " " + tagname
+                        metadict['categories'] = tag_str
+
                 elif fieldName == 'Copyright Restrictions:':
                     if fieldValue.contents:
                         metadict['copyright'] = str(fieldValue)
