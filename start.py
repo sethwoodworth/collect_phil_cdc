@@ -46,6 +46,24 @@ def get_images():
         path = './' + HIRES_IMG_DIR + id
         urllib.urlretrieve(url, asdf)
 
+class ImgDownloader(threading.Thread):
+    def __init__(self, queue):
+        threading.Thread.__init__(self)
+        self.queue = queue
+
+    def run(self):
+        while True:
+            #grabs url from queue
+            host = self.queue.get()
+
+
+            #grabs urls of hosts and prints first 1024 bytes of page
+            url = urllib2.urlopen(host)
+            print url.read(1)
+
+            #signals to queue job is done
+            self.queue.task_done()
+
 def store_raw_html(id, html):
     idstr = str(id).zfill(5)
     floor = id - (id%100)
