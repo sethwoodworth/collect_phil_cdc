@@ -46,7 +46,7 @@ def get_me_a_cookie():
 
 
 def cdc_phil_scrape(id, cj=get_me_a_cookie()):
-	url_to_scrape = 'http://phil.cdc.gov/phil/details.asp';
+	url_to_scrape = 'http://phil.cdc.gov/phil/details.asp'
 	# this post data doesn't seem to really matter, as long as it is correctly formed
 	image_page_post_values = {'count':	'1',
 		'displaymode':	'1',
