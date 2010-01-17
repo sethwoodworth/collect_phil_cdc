@@ -61,11 +61,11 @@ def make_directories(ids, root_dir):
 # this threading code is mostly from there
 db_lock = threading.RLock()
 class ImgDownloader(threading.Thread):
-    def __init__(self, queue, root_dir, flag_table):
+    def __init__(self, queue, root_dir, flag_table_object):
         threading.Thread.__init__(self)
         self.queue = queue
         self.root_dir = root_dir
-        self.flag_table = flag_table
+        self.flag_table_object = flag_table_object
     def run(self):
         try:
             ## grab url/id tuple from queue
@@ -78,7 +78,7 @@ class ImgDownloader(threading.Thread):
             id_status_dict = {'id': id, 'status': 1}
             # signal to db that we're done downloading
             with db_lock:
-                lores_status_table.insert().execute(id_status_dict)
+                flag_table_object.insert().execute(id_status_dict)
             # signals to queue job is done
             self.queue.task_done()
         except KeyboardInterrupt:
@@ -88,13 +88,13 @@ class ImgDownloader(threading.Thread):
             traceback.print_exc()
             return None
 
-def get_images(root_dir, db_column_name, flag_table):
+def get_images(root_dir, db_column_name, flag_table, flag_table_object):
     ## takes: a directory global, url_to? from phil table, an image status table
     ## returns: images to folder structure and stores downloaded status table
     queue = Queue.Queue()
     # MAKE OUR THREADZZZ
     for i in range(MAX_DAEMONS):
-        t = ImgDownloader(queue, root_dir, flag_table)
+        t = ImgDownloader(queue, root_dir, flag_table_object)
         t.setDaemon(True)
         t.start()
 
@@ -123,9 +123,9 @@ def get_images(root_dir, db_column_name, flag_table):
         
 
 def get_all_images():
-    get_images(LORES_IMG_DIR, 'url_to_lores_img', 'lores_status')
-    get_images(HIRES_IMG_DIR, 'url_to_hires_img', 'hires_status')
-    #get_images(THUMB_IMG_DIR, 'url_to_thumb_img', 'thumb_status')
+    get_images(THUMB_IMG_DIR, 'url_to_thumb_img', 'thumb_status', thumb_status_table)
+    get_images(LORES_IMG_DIR, 'url_to_lores_img', 'lores_status', lores_status_table)
+    get_images(HIRES_IMG_DIR, 'url_to_hires_img', 'hires_status', hires_status_table)
 
 def store_raw_html(id, html):
     ## stores an html dump from the scraping process, just in case
