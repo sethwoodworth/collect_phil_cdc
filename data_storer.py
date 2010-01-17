@@ -19,6 +19,7 @@ phil_table = Table('phil', metadata,
     Column('source', Text),       # Source Library - Where the image originated
     Column('url_to_hires_img', Text),  # seth: static url to hi-res images
     Column('url_to_lores_img', Text),  # seth: static url to lo-res images
+    Column('url_to_thumb_img', Text),  # seth: static url to thumb images
     Column('copyright', Text),  # Copyright Status - either "Public Domain" (free use) or Copyright Protected
 #   Column('is_color', Boolean),    # Color Scheme - Color or Black & White # provide, but not printed, null for now
     Column('creation', Text),   # Creation Date - When the object was created (photo taken, video shot, etc.)
@@ -37,7 +38,7 @@ lores_status_table = Table('lores_status', metadata,
     Column('status', Boolean),
 )
 
-thumbs_status_table = Table('thumbs_status', metadata,
+thumb_status_table = Table('thumb_status', metadata,
     Column('id', Integer, primary_key=True),
     Column('status', Boolean),
 )
@@ -60,13 +61,14 @@ class Phil(Base):
     source = Column(String)
     url_to_hires_img = Column(String)
     url_to_lores_img = Column(String)
+    url_to_thumb_img = Column(String)
     copyright = Column(String)
 #   is_color = Column(Boolean)
     creation = Column(String)
     access_time = Column(Integer)
 
 
-    def __init__(self, id, desc, categories, credit, links, provider, source, url_to_hires_img, url_to_lores_img, copyright, creation, access_time):
+    def __init__(self, id, desc, categories, credit, links, provider, source, url_to_hires_img, url_to_lores_img, url_to_thumb_img, copyright, creation, access_time):
         self.id = id
         self.desc = desc
         self.categories = categories
@@ -76,13 +78,14 @@ class Phil(Base):
         self.source = source
         self.url_to_hires_img = url_to_hires_img
         self.url_to_lores_img = url_to_lores_img
+        self.url_to_thumb_img = url_to_thumb_img
         self.copyright = copyright
         self.creation = creation
         self.access_time = access_time
 
 
     def __repr__(self):
-        return "<Phil('%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s',)>" % (self.id, self.desc, self.categories, self.credit, self.links, self.provider, self.source, self.url_to_hires_img, self.url_to_lores_img, self.copyright, self.creation, self.upload, self.access_time)
+        return "<Phil('%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s')>" % (self.id, self.desc, self.categories, self.credit, self.links, self.provider, self.source, self.url_to_hires_img, self.url_to_lores_img, self.url_to_thumb_img, self.copyright, self.creation, self.upload, self.access_time)
 
 Session = sessionmaker(bind=db)
 session = Session()
