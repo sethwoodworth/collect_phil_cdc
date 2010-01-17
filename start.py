@@ -55,7 +55,7 @@ def make_directories(ids, root_dir):
 
 # hug thanks to http://www.ibm.com/developerworks/aix/library/au-threadingpython/
 # this threading code is mostly from there
-
+db_lock = threading.RLock()
 class ImgDownloader(threading.Thread):
     def __init__(self, queue):
         threading.Thread.__init__(self)
@@ -63,15 +63,17 @@ class ImgDownloader(threading.Thread):
 
     def run(self):
         while True:
-            #grabs url/id tuple from queue
+            # grabs url/id tuple from queue
             id_url_tuple = self.queue.get()
             id = id_url_tuple[0]
             url = id_url_tuple[1]
             path = './' + root_dir + '/' + floorify(id) + '/' + str(id).zfill(5) + url[-4:]
             urllib.urlretrieve(url, path)
             s = text('REPLACE INTO ' + flag_table + ' (id,status) values (' + id + ',1);')
-            db.execute(s)
-            #signals to queue job is done
+            # signal to db that we're done downloading
+            with db_lock:
+                db.execute(s)
+            # signals to queue job is done
             self.queue.task_done()
 
 MAX_DAEMONS = 5
