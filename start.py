@@ -78,7 +78,7 @@ class ImgDownloader(threading.Thread):
             id_status_dict = {'id': id, 'status': 1}
             # signal to db that we're done downloading
             with db_lock:
-                flag_table_object.insert().execute(id_status_dict)
+                self.flag_table_object.insert().execute(id_status_dict)
             # signals to queue job is done
             self.queue.task_done()
         except KeyboardInterrupt:
@@ -249,4 +249,4 @@ def check_latest(start):
 if __name__ == '__main__':
     bootstrap_filestructure()
     cdc_phil_scrape_range(1, 11850)
-    #get_all_images()
+    get_all_images()
