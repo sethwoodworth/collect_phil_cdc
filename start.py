@@ -67,26 +67,29 @@ class ImgDownloader(threading.Thread):
         self.root_dir = root_dir
         self.flag_table_object = flag_table_object
     def run(self):
-        try:
+        while True:
             ## grab url/id tuple from queue
             id_url_tuple = self.queue.get()
-            print id_url_tuple
-            id = id_url_tuple[0]
-            url = id_url_tuple[1]
-            path = './' + self.root_dir + '/' + floorify(id) + '/' + str(id).zfill(5) + url[-4:]
-            urllib.urlretrieve(url, path)
-            id_status_dict = {'id': id, 'status': 1}
-            # signal to db that we're done downloading
-            with db_lock:
-                self.flag_table_object.insert().execute(id_status_dict)
-            # signals to queue job is done
-            self.queue.task_done()
-        except KeyboardInterrupt:
-            sys.exit(0)
-        except:
-            print "ERROR: trouble dling image apparently..."
-            traceback.print_exc()
-            return None
+            try:
+                print id_url_tuple
+                id = id_url_tuple[0]
+                url = id_url_tuple[1]
+                path = './' + self.root_dir + '/' + floorify(id) + '/' + str(id).zfill(5) + url[-4:]
+                urllib.urlretrieve(url, path)
+                id_status_dict = {'id': id, 'status': 1}
+                # signal to db that we're done downloading
+                with db_lock:
+                    self.flag_table_object.insert().execute(id_status_dict)
+                # signals to queue job is done
+                self.queue.task_done()
+            except KeyboardInterrupt:
+                sys.exit(0)
+                self.queue.task_done()
+            except:
+                print "ERROR: trouble dling image apparently..."
+                traceback.print_exc()
+                self.queue.task_done()
+                return None
 
 def get_images(root_dir, db_column_name, flag_table, flag_table_object):
     ## takes: a directory global, url_to? from phil table, an image status table
@@ -248,5 +251,6 @@ def check_latest(start):
 
 if __name__ == '__main__':
     bootstrap_filestructure()
-    cdc_phil_scrape_range(1, 11850)
-    get_all_images()
+    #cdc_phil_scrape_range(1, 11850)
+    get_images(THUMB_IMG_DIR, 'url_to_thumb_img', 'thumb_status', thumb_status_table)
+    #get_all_images()
