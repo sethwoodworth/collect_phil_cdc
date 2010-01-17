@@ -37,6 +37,11 @@ lores_status_table = Table('lores_status', metadata,
     Column('status', Boolean),
 )
 
+thumbs_status_table = Table('thumbs_status', metadata,
+    Column('id', Integer, primary_key=True),
+    Column('status', Boolean),
+)
+
 metadata.create_all(db)
 
 
@@ -83,6 +88,7 @@ Session = sessionmaker(bind=db)
 session = Session()
 
 table = phil_table.insert()
+
 #table.execute(metadata)
 #table.commit()
 
