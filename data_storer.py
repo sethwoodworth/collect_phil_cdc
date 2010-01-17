@@ -83,6 +83,7 @@ Session = sessionmaker(bind=db)
 session = Session()
 
 table = phil_table.insert()
+
 #table.execute(metadata)
 #table.commit()
 

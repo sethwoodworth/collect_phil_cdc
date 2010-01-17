@@ -1,5 +1,6 @@
 import urllib
 import os.path
+import Queue
 import sys
 import threading
 import traceback
@@ -30,6 +31,7 @@ from parser import *
 HIRES_IMG_DIR = 'hires'
 LORES_IMG_DIR = 'thumbs'
 RAW_HTML_DIR = 'cdc-phil-raw-html'
+MAX_DAEMONS = 50
 
 def mkdir(dirname):
     if not os.path.isdir("./" + dirname + "/"):
@@ -57,24 +59,33 @@ def make_directories(ids, root_dir):
 # this threading code is mostly from there
 
 class ImgDownloader(threading.Thread):
-    def __init__(self, queue):
+    def __init__(self, queue, root_dir, flag_table):
         threading.Thread.__init__(self)
         self.queue = queue
+        self.root_dir = root_dir
+        self.flag_table = flag_table
 
     def run(self):
         while True:
-            #grabs url/id tuple from queue
-            id_url_tuple = self.queue.get()
-            id = id_url_tuple[0]
-            url = id_url_tuple[1]
-            path = './' + root_dir + '/' + floorify(id) + '/' + str(id).zfill(5) + url[-4:]
-            urllib.urlretrieve(url, path)
-            s = text('REPLACE INTO ' + flag_table + ' (id,status) values (' + id + ',1);')
-            db.execute(s)
-            #signals to queue job is done
-            self.queue.task_done()
+            try:
+                #grabs url/id tuple from queue
+                id_url_tuple = self.queue.get()
+                print id_url_tuple
+                id = id_url_tuple[0]
+                url = id_url_tuple[1]
+                path = './' + self.root_dir + '/' + floorify(id) + '/' + str(id).zfill(5) + url[-4:]
+                urllib.urlretrieve(url, path)
+                id_status_dict = {'id': id, 'status': 1}
+                lores_status_table.insert().execute(id_status_dict)
+                # signals to queue job is done
+                self.queue.task_done()
+            except KeyboardInterrupt:
+                sys.exit(0)
+            except:
+                print "ERROR: WE COULDN'T EVEN GET A COOKIE"
+                traceback.print_exc()
+                return None
 
-MAX_DAEMONS = 5
 
 #    query = text("select id,url_to_hires_img from phil where url_to_hires_img != '';")
 #    query = text("select phil.id,url_to_hires_img from phil join hires_status ON ( phil.id = hires_status.id ) where hires_status.hires_img_dl != 1;")
@@ -83,34 +94,39 @@ MAX_DAEMONS = 5
 def get_images(root_dir, db_column_name, flag_table):
     ## takes: a directory global, url_to? from phil table, an image status table
     ## returns: images to folder structure and stores downloaded status table
-#    queue = Queue.Queue()
-#    #MAKE OUR THREADZZZ
-#    for i in range(max_daemons):
-#        t = ImgDownloader(queue)
-#        t.setDaemon(True)
-#        t.start()
+    queue = Queue.Queue()
+    #MAKE OUR THREADZZZ
+    for i in range(MAX_DAEMONS):
+        t = ImgDownloader(queue, root_dir, flag_table)
+        t.setDaemon(True)
+        t.start()
 
     query = text("select id," + db_column_name + " from phil where " + db_column_name + "  IS NOT null;")
     ids_and_urls = db.execute(query).fetchall()
-    print ids_and_urls
+    id_dict = dict(ids_and_urls)
+
     query = text("select id from " + flag_table + " where status = '1';")
     ids_to_remove = db.execute(query).fetchall()
-    print ids_to_remove
+    rm_dict = map((lambda tuple: tuple[0]), ids_to_remove)
 
 
-#    #populate queue with data
-#    # TODO:
-#
-#    # generate list of ids from results dict
-#    ids = map((lambda tuple: tuple[0]), results)
-#    print ids
-#    # bootstrap our file structure for our download
-#    make_directories(ids, root_dir)
-#    # enqueue all the results
-#    map((lambda id_url_tuple:queue.put(id_url_tuple)), results)
-#
-#    # wait on the queue until everything has been processed     
-#    queue.join()
+    for id_rm in rm_dict:
+        del id_dict[id_rm]
+
+    #populate queue with data
+    # TODO:
+
+    # generate list of ids from results dict
+    ids = id_dict.keys()
+    #print ids
+    # bootstrap our file structure for our download
+    make_directories(ids, root_dir)
+    # enqueue all the results
+    id_tuples = id_dict.items()
+    map(queue.put, id_tuples)
+
+    # wait on the queue until everything has been processed
+    queue.join()
         
 
 def test():
