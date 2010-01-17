@@ -16,6 +16,7 @@ def init_dict():
         'source': '',
         'url_to_hires_img':  '',
         'url_to_lores_img':  '',
+        'url_to_thumb_img':  '',
         'copyright': '',
         'creation': None,
         'access_time': datetime.today()
@@ -36,6 +37,7 @@ def parse_img(html):
     # navigate the block tree, find elements, and store them in the dict
     metadict['id'] = block.find('tr')('td')[1].contents[0] # grab the unique image id
     metadict['url_to_lores_img'] = soup("h2")[0].parent("img")[0]['src']
+    metadict['url_to_thumb_img'] = re.sub('_lores.jpg', '_thumb.jpg', metadict['url_to_lores_img'])
 
     # shove all the rest of the rows of data into a list, organized by row
     # we do this so that we can be sure that each item in the list is a row in our table of data

@@ -248,5 +248,5 @@ def check_latest(start):
 
 if __name__ == '__main__':
     bootstrap_filestructure()
-    #cdc_phil_scrape_range(1, 11850)
-    get_all_images()
+    cdc_phil_scrape_range(1, 11850)
+    #get_all_images()
