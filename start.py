@@ -28,8 +28,9 @@ from parser import *
 
 ## Local configs
 ## Set these as needed locally
+THUMB_IMG_DIR = 'thumbs'
+LORES_IMG_DIR = 'lores'
 HIRES_IMG_DIR = 'hires'
-LORES_IMG_DIR = 'thumbs'
 RAW_HTML_DIR = 'cdc-phil-raw-html'
 MAX_DAEMONS = 50
 
@@ -38,8 +39,9 @@ def mkdir(dirname):
         os.mkdir("./" + dirname + "/")
 
 def bootstrap_filestructure():
-    mkdir(HIRES_IMG_DIR)
+    mkdir(THUMB_IMG_DIR)
     mkdir(LORES_IMG_DIR)
+    mkdir(HIRES_IMG_DIR)
     mkdir(RAW_HTML_DIR)    
 
 def floorify(id):
@@ -68,7 +70,7 @@ class ImgDownloader(threading.Thread):
     def run(self):
         while True:
             try:
-                #grabs url/id tuple from queue
+                ## grab url/id tuple from queue
                 id_url_tuple = self.queue.get()
                 print id_url_tuple
                 id = id_url_tuple[0]
@@ -87,15 +89,11 @@ class ImgDownloader(threading.Thread):
                 return None
 
 
-#    query = text("select id,url_to_hires_img from phil where url_to_hires_img != '';")
-#    query = text("select phil.id,url_to_hires_img from phil join hires_status ON ( phil.id = hires_status.id ) where hires_status.hires_img_dl != 1;")
-#    query = text("select phil.id," + db_column_name + " from phil join " + flag_table + " ON ( phil.id = " + flag_table + ".id ) where " + flag_table + ".status != '1';")
-
 def get_images(root_dir, db_column_name, flag_table):
     ## takes: a directory global, url_to? from phil table, an image status table
     ## returns: images to folder structure and stores downloaded status table
     queue = Queue.Queue()
-    #MAKE OUR THREADZZZ
+    # MAKE OUR THREADZZZ
     for i in range(MAX_DAEMONS):
         t = ImgDownloader(queue, root_dir, flag_table)
         t.setDaemon(True)
@@ -113,12 +111,8 @@ def get_images(root_dir, db_column_name, flag_table):
     for id_rm in rm_dict:
         del id_dict[id_rm]
 
-    #populate queue with data
-    # TODO:
-
     # generate list of ids from results dict
     ids = id_dict.keys()
-    #print ids
     # bootstrap our file structure for our download
     make_directories(ids, root_dir)
     # enqueue all the results
@@ -129,10 +123,10 @@ def get_images(root_dir, db_column_name, flag_table):
     queue.join()
         
 
-def test():
+def get_all_images():
+    get_images(THUMB_IMG_DIR, 'url_to_thumb_img', 'thumb_status')
     get_images(LORES_IMG_DIR, 'url_to_lores_img', 'lores_status')
-    #get_images(HIRES_IMG_DIR, 'url_to_hires_img')
-
+    get_images(HIRES_IMG_DIR, 'url_to_hires_img', 'hires_status')
 
 def store_raw_html(id, html):
     ## stores an html dump from the scraping process, just in case
@@ -256,4 +250,4 @@ def check_latest(start):
 if __name__ == '__main__':
     bootstrap_filestructure()
     #cdc_phil_scrape_range(1, 11850)
-    test()
+    get_all_images()
