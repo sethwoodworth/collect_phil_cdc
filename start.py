@@ -39,9 +39,9 @@ def mkdir(dirname):
         os.mkdir("./" + dirname + "/")
 
 def bootstrap_filestructure():
-    mkdir(THUMB_IMG_DIR)
-    mkdir(LORES_IMG_DIR)
-    mkdir(HIRES_IMG_DIR)
+    mkdir(THUMB_IMG_DIR)    
+    mkdir(LORES_IMG_DIR)    
+    mkdir(HIRES_IMG_DIR)    
     mkdir(RAW_HTML_DIR)    
 
 def floorify(id):
@@ -59,35 +59,34 @@ def make_directories(ids, root_dir):
 
 # hug thanks to http://www.ibm.com/developerworks/aix/library/au-threadingpython/
 # this threading code is mostly from there
-
+db_lock = threading.RLock()
 class ImgDownloader(threading.Thread):
     def __init__(self, queue, root_dir, flag_table):
         threading.Thread.__init__(self)
         self.queue = queue
         self.root_dir = root_dir
         self.flag_table = flag_table
-
     def run(self):
-        while True:
-            try:
-                ## grab url/id tuple from queue
-                id_url_tuple = self.queue.get()
-                print id_url_tuple
-                id = id_url_tuple[0]
-                url = id_url_tuple[1]
-                path = './' + self.root_dir + '/' + floorify(id) + '/' + str(id).zfill(5) + url[-4:]
-                urllib.urlretrieve(url, path)
-                id_status_dict = {'id': id, 'status': 1}
+        try:
+            ## grab url/id tuple from queue
+            id_url_tuple = self.queue.get()
+            print id_url_tuple
+            id = id_url_tuple[0]
+            url = id_url_tuple[1]
+            path = './' + self.root_dir + '/' + floorify(id) + '/' + str(id).zfill(5) + url[-4:]
+            urllib.urlretrieve(url, path)
+            id_status_dict = {'id': id, 'status': 1}
+            # signal to db that we're done downloading
+            with db_lock:
                 lores_status_table.insert().execute(id_status_dict)
-                # signals to queue job is done
-                self.queue.task_done()
-            except KeyboardInterrupt:
-                sys.exit(0)
-            except:
-                print "ERROR: WE COULDN'T EVEN GET A COOKIE"
-                traceback.print_exc()
-                return None
-
+            # signals to queue job is done
+            self.queue.task_done()
+        except KeyboardInterrupt:
+            sys.exit(0)
+        except:
+            print "ERROR: trouble dling image apparently..."
+            traceback.print_exc()
+            return None
 
 def get_images(root_dir, db_column_name, flag_table):
     ## takes: a directory global, url_to? from phil table, an image status table
@@ -124,9 +123,9 @@ def get_images(root_dir, db_column_name, flag_table):
         
 
 def get_all_images():
-    get_images(THUMB_IMG_DIR, 'url_to_thumb_img', 'thumb_status')
     get_images(LORES_IMG_DIR, 'url_to_lores_img', 'lores_status')
     get_images(HIRES_IMG_DIR, 'url_to_hires_img', 'hires_status')
+    #get_images(THUMB_IMG_DIR, 'url_to_thumb_img', 'thumb_status')
 
 def store_raw_html(id, html):
     ## stores an html dump from the scraping process, just in case

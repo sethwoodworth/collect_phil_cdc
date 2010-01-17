@@ -3,39 +3,6 @@ import urllib
 import urllib2
 import cookielib
 
-def get_last_img_id():
-    # Run a reverse sort query on PHIL to find the highest image ID
-	quicksearch_page_post_values = {
-		'formaction':	'SEARCH',
-		'illustrations':	'on',
-		'keywords':	' ',
-		'keywordstext':	' ',
-		'photos':	'on',
-		'searchtype':	'photo|illustration|video',
-		'video':	'on',
-	}
-	urlopen = urllib2.urlopen
-	Request = urllib2.Request
-	# This is a subclass of FileCookieJar that has useful load and save methods
-	cj = cookielib.LWPCookieJar()
-
-    # this puts the cookie in the urllib opener
-	opener = urllib2.build_opener(urllib2.HTTPCookieProcessor(cj))
-	urllib2.install_opener(opener)
-	# fake a user agent
-	txheaders =  {'User-agent' : 'Mozilla/4.0 (compatible; MSIE 5.5; Windows NT)'}
-
-	# we have to step through the landing page and the search results pages in order to access an individual image's page
-	# otherwise the site gives us session errors
-	# so we go ahead and do that, picking up the necessary cookies along the way
-	req = Request('http://phil.cdc.gov/phil/home.asp', None, txheaders)
-	#cj.save(COOKIEFILE)                     # save the cookies 
-	handle = urlopen(req)
-	req = Request('http://phil.cdc.gov/phil/quicksearch.asp', urllib.urlencode(quicksearch_page_post_values), txheaders)
-	#cj.save(COOKIEFILE)                     # save the cookies again
-	handle = urlopen(req)
-	
-	return handle
 
 def get_me_a_cookie():
 	# this post data doesn't seem to really matter, as long as it is correctly formed
@@ -132,6 +99,7 @@ def is_session_expired_page(html):
 		return False
 	else:
 		return True
+
 
 
 if __name__ == '__main__':
