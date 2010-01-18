@@ -1,3 +1,25 @@
+################################################################################
+################################################################################
+#####################                                  #########################
+#####################         Release Our Data         #########################
+#####################                                  #########################
+#####################       a HelloSilo Project        #########################
+#####################       <ROD@hellosilo.com>        #########################
+################################################################################
+##                                                                            ##  
+##     Copyright 2010                                                         ##
+##                                                                            ##  
+##         Parker Phinney   @gameguy43   <parker@madebyparker.com>            ##
+##         Seth Woodworth   @sethish     <seth@sethish.com>                   ##
+##                                                                            ##
+##                                                                            ##
+##     Licensed under the GPLv3 or later,                                     ##
+##     see PERMISSION for copying permission                                  ##
+##     and COPYING for the GPL License                                        ##
+##                                                                            ##
+################################################################################
+################################################################################
+
 import re
 import time
 from datetime import datetime
@@ -41,7 +63,8 @@ def parse_img(html):
 
     # shove all the rest of the rows of data into a list, organized by row
     # we do this so that we can be sure that each item in the list is a row in our table of data
-    # otherwise, rows within tables that are nested within our data table (these /do/ exist) would be given separate indices in our list
+    # otherwise, rows within tables that are nested within our data table 
+    # (these /do/ exist) would be given separate indices in our list
     # i knows, this isn't pretty.  feel free to make it prettier --parker
     # note that row[0] is the second tr in the table
     rowsOfData = block.find('tr').findNextSiblings('tr')
@@ -104,12 +127,14 @@ def parse_img(html):
                     if fieldValue.contents:
                         metadict['copyright'] = unicode(repr(str(fieldValue)))
             except:
-                print "error parsing table row contents. we were expecting two cells: one field with a bolded name and one field with data. rowContents were: "
+                print "Error parsing table row contents." 
+                print "Expecting two cells: one field with a bolded name and one field with data. rowContents were: "
                 print repr(str(rowContents))
                 traceback.print_exc()
 
         except:
-            print "error parsing table row. we were expecting two cells: one field with a bolded name and one field with data. rowContents were: "
+            print "Error parsing table row."
+            print "Expecting two cells: one field with a bolded name and one field with data. rowContents were: "
             print repr(str(rowContents))
             traceback.print_exc()
 

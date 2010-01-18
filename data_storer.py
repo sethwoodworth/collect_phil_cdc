@@ -1,3 +1,25 @@
+################################################################################
+################################################################################
+#####################                                  #########################
+#####################         Release Our Data         #########################
+#####################                                  #########################
+#####################       a HelloSilo Project        #########################
+#####################       <ROD@hellosilo.com>        #########################
+################################################################################
+##                                                                            ##  
+##     Copyright 2010                                                         ##
+##                                                                            ##  
+##         Parker Phinney   @gameguy43   <parker@madebyparker.com>            ##
+##         Seth Woodworth   @sethish     <seth@sethish.com>                   ##
+##                                                                            ##
+##                                                                            ##
+##     Licensed under the GPLv3 or later,                                     ##
+##     see PERMISSION for copying permission                                  ##
+##     and COPYING for the GPL License                                        ##
+##                                                                            ##
+################################################################################
+################################################################################
+
 from sqlalchemy import *
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker, mapper
