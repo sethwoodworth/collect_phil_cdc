@@ -86,7 +86,8 @@ class ImgDownloader(threading.Thread):
                 sys.exit(0)
                 self.queue.task_done()
             except:
-                print "ERROR: trouble dling image apparently..."
+                print "ERROR: trouble dling image apparently... " + str(id)
+                print path
                 traceback.print_exc()
                 self.queue.task_done()
                 return None
@@ -101,7 +102,7 @@ def get_images(root_dir, db_column_name, flag_table, flag_table_object):
         t.setDaemon(True)
         t.start()
 
-    query = text("select id," + db_column_name + " from phil where " + db_column_name + "  IS NOT null;")
+    query = text("select id," + db_column_name + " from phil where " + db_column_name + "  != '';")
     ids_and_urls = db.execute(query).fetchall()
     id_dict = dict(ids_and_urls)
 
@@ -252,5 +253,4 @@ def check_latest(start):
 if __name__ == '__main__':
     bootstrap_filestructure()
     #cdc_phil_scrape_range(1, 11850)
-    get_images(THUMB_IMG_DIR, 'url_to_thumb_img', 'thumb_status', thumb_status_table)
-    #get_all_images()
+    get_all_images()
