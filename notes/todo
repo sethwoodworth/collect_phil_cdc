@@ -1,35 +1,106 @@
-seth:
-    sql query
-        quickfix for now, until someone tells us how to be better at databases
+next actions:
+all the server stuff
+press release/other website text
 
-parker:
-    threading
-    parser is smarter--
-        remove td tags surrounding a couple things
-        knows if we're looking at the page for an id that doesn't exist
 
+server:
+    get database and images on there
+    wordpress on dreamhost
+        installed
+        parker needs access to the database
+        admin accounts
+    second wordpress install for our press release/contact us site
+    set up database for phil scrape data
+    copy phil scrape data
+        move it to sql
+    check in the theme stuff that basically does all of the image presentation
+    maybe deploy out of git
+
+
+all actions:
+
+dump our data in places
+    figure out how to upload to archive.org
+        technical task, email task
+    figure out how to upload to wikicommons
+        technical task, email task
+    also flickr commons
+
+writing
+    website
+        press release
+        about us in general
+        about this project specifically
+    cdc
+        polite but declarative
+    soliciting funding
+        hesperion
+        partners in health
+            use parker's connection with dr kim
+        open data groups?
+    solicit advice/tell ppl what we're doing
+        carl malahmud (sp?)
+        free culture people (discuss@?)
+        asheesh
+        aaron swartz
+        alexis anaynay (bananamana fo fana)
+
+
+
+
+
+code::::::
+move the data into subfolder data/
+
+README
+    explain things about the database
+        the format for "links" field
+        the format for the categories field
+        the fact that we have single quotes in places
+        the fact that we have wrapped td tags in some places
+
+better var names
+hook in ian's stuff
+    add metadata that isn't reported but is accessible from search
+    image analytics (color/not, size, etc)
+parser is smarter--
+    remove td tags surrounding a couple things
+    knows if we're looking at the page for an id that doesn't exist
+handle the case where we get id collisions
+    for metadata scraping--we already handle this well for image download
+    maybe we just copy our method from the image downloading code
 code to find highest index on their db
     search for space char, parse out first result from their results page
-running analytics on the data so we have some stuff for the site/press release
-emails/phone calls asking for sponsorship
-press release, website domain name
-    write the press release and stuff now, but sit on it until we can try to get some sponsorships
-clean up the code:
-    better commenting.  better var names.  
-    WRITE A README
+parser: better representation of categories?
+
+testing suite type stuff
 code to step through the db and see where we have holes.
     also through the file structure
 code to take our list of things that failed before, and make sure that they're all empty things.
-code to add metadata that isn't reported but is accessible from search
-    color
-    video
-DONE?: database: handle the case where we get id collisions
-parser: better representation of categories?
+
+someday, maybe:
+why isn't anyone else doing this?
+pharmaceutical companies
 
 
+analytics to get:
+number of images for each year
+number of "gaps" in the database
+    because if they take something out, it's gone forever
+number of illustrations
+number of images
+number of images
+average size of image
+number of images that are in the public domain
+
+analytics that we have now:
+copyright:
+    10506 none
+    420 yes copyright
 
 
-
+deprecated:
+------------------------------------------------------------
 cdc scraping notes:
 
 code
