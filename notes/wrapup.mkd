@@ -1,0 +1,67 @@
+Wrapup and Publication
+======================
+
+1. Technical details to be finished
+2. Text to be written
+3. Transition to next steps
+
+
+Technical details to be finished
+--------------------------------
+
+### Uploads ###
+
+WikiCommons
+    1. Email/poke via IRC those who have scripted uploads before
+    2. research and configure pywikipediabot to upload
+
+Flickr Commons
+    1. Email the CDC, discuss partnership
+
+Archive.org
+    - Archive doesn't have an images section
+    1. Raw Dump as tar and db
+
+Torrent Sites # not very interested personally: seth
+    1. Look for seeders
+        - rate limited from harvard
+
+### Sponsorship ###
+
+Orgs
+    1. find/make list of orgs
+        - hesperian
+        - http://www.path.org/
+    2. write stock email reaching out to said group
+
+press release 
+    - write the press release and stuff now, but sit on it until we can try to get some sponsorships
+
+website domain name
+
+
+### Code ###
+
+Cleanup remaining 
+    1. README file describing the code's use
+    2. Variable naming
+    3. Improved commenting
+    4. Formatting and comment standarizing
+
+Bug fixes and abstraction
+    1. sqlalchemy implementation (data\_storer.py) re-write
+    2. recast raw sql queries as sqlalchemy session queries (see class method bookmark)
+    3. Fix parser's handling of '''''''s
+    4. insert check and/or fallback of \_thumb.jpg to \_th.jpg
+    5. fix unicode and python escaped unicode handling of scraper
+    6. Implement Ian's img data as a database insert
+    7. Implement ian's id type query as database field(s)
+    8. add sqlalchemy exception handling for non-unique id inserts
+    9. parser: better representation of categories?
+
+Framework for iteration, regex, and scraping
+    1. code to find highest index on a db (via newton aproximation and via interface query)
+    2. analytics framework for description fields and categories
+    3. datatype to database create and class object mapping tool (sqlalchemy)
+    4. database/filesystem integretiy checks (step through id's)
+    5. step through db and doublecheck all missing data (inform future regex)
