@@ -1,0 +1,26 @@
+Collect Public Health Images
+============================
+
+Requirements
+------------
+These scripts require the following modules
+ + start.py
+    - import Queue
+    - import threading
+    - import traceback
+    - import urllib
+    - import urllib2
+ + scraper.py
+    - import cookielib
+    - import string
+ + data\_storer.py
+    - import sqlalchemy
+ + imginfo.py
+    - import Image # requires PIL 'python image library'
+
+Files
+-----
+ + start.py
+    - command script that imports scraper.py, parser.py and data\_storer.py
+    - contains configuration GLOBALs for directory stucture
+    - cdc\_phil\_scrape\_range(start, end) controls what ID range the script will collect

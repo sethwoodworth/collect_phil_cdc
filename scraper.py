@@ -20,10 +20,10 @@
 ################################################################################
 ################################################################################
 
+import cookielib
 import string
 import urllib
 import urllib2
-import cookielib
 
 
 def get_me_a_cookie():
