@@ -1,3 +1,25 @@
+################################################################################
+################################################################################
+#####################                                  #########################
+#####################         Release Our Data         #########################
+#####################                                  #########################
+#####################       a HelloSilo Project        #########################
+#####################       <ROD@hellosilo.com>        #########################
+################################################################################
+##                                                                            ##  
+##     Copyright 2010                                                         ##
+##                                                                            ##  
+##         Parker Phinney   @gameguy43   <parker@madebyparker.com>            ##
+##         Seth Woodworth   @sethish     <seth@sethish.com>                   ##
+##                                                                            ##
+##                                                                            ##
+##     Licensed under the GPLv3 or later,                                     ##
+##     see PERMISSION for copying permission                                  ##
+##     and COPYING for the GPL License                                        ##
+##                                                                            ##
+################################################################################
+################################################################################
+
 import urllib
 import os.path
 import Queue
@@ -8,23 +30,6 @@ import traceback
 from scraper import *
 from data_storer import *
 from parser import *
-
-################################################################################
-#####################                                  #########################
-#####################         Release Our Data         #########################
-#####################                                  #########################
-################################################################################
-
-#####
-#####  A HelloSilo Project
-#####  ROD@HelloSilo.com
-#####
-
-#####
-##### Authors:
-##### Parker Phinney @gameguy43   (parker@madebyparker.com)
-##### Seth Woodworth @sethish     (seth@sethish.com)
-#####
 
 ## Local configs
 ## Set these as needed locally
@@ -233,13 +238,6 @@ def cdc_phil_scrape_range(start, end):
         print "Failed at " + str(len(failed_indices)) + " indices :"
         print failed_indices
 
-
-def check_start(start, end):
-    if start < end:
-        print "choosing a higher end than start, range fail"
-    else:
-        print "arg"
-
 def check_latest(start):
     check_start(start)
     query = text("select id from phil order by id desc limit 1;")
@@ -252,5 +250,5 @@ def check_latest(start):
 
 if __name__ == '__main__':
     bootstrap_filestructure()
-    #cdc_phil_scrape_range(1, 11850)
+    cdc_phil_scrape_range(1, 11850)
     get_all_images()

@@ -1,3 +1,25 @@
+################################################################################
+################################################################################
+#####################                                  #########################
+#####################         Release Our Data         #########################
+#####################                                  #########################
+#####################       a HelloSilo Project        #########################
+#####################       <ROD@hellosilo.com>        #########################
+################################################################################
+##                                                                            ##  
+##     Copyright 2010                                                         ##
+##                                                                            ##  
+##         Parker Phinney   @gameguy43   <parker@madebyparker.com>            ##
+##         Seth Woodworth   @sethish     <seth@sethish.com>                   ##
+##                                                                            ##
+##                                                                            ##
+##     Licensed under the GPLv3 or later,                                     ##
+##     see PERMISSION for copying permission                                  ##
+##     and COPYING for the GPL License                                        ##
+##                                                                            ##
+################################################################################
+################################################################################
+
 import string
 import urllib
 import urllib2
@@ -45,7 +67,8 @@ def searchtype_query(searchtype, cj):
 	return re.split('\|', max(re.split(' ', html), key=len)[7:-1])
     
 	# returns list containing all illustration numbers
-	# splits html into a list by spaces, pulls the longest word, drops the first eight and the last one charecters, and splits it into a list by pipe
+	# splits html into a list by spaces, pulls the longest word,
+    # drops the first eight and the last one charecters, and splits it into a list by pipe
 	
 
 if __name__ == '__main__':

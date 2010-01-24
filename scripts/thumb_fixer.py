@@ -1,3 +1,25 @@
+################################################################################
+################################################################################
+#####################                                  #########################
+#####################         Release Our Data         #########################
+#####################                                  #########################
+#####################       a HelloSilo Project        #########################
+#####################       <ROD@hellosilo.com>        #########################
+################################################################################
+##                                                                            ##  
+##     Copyright 2010                                                         ##
+##                                                                            ##  
+##         Parker Phinney   @gameguy43   <parker@madebyparker.com>            ##
+##         Seth Woodworth   @sethish     <seth@sethish.com>                   ##
+##                                                                            ##
+##                                                                            ##
+##     Licensed under the GPLv3 or later,                                     ##
+##     see PERMISSION for copying permission                                  ##
+##     and COPYING for the GPL License                                        ##
+##                                                                            ##
+################################################################################
+################################################################################
+
 # move this to the root of the collect-cdc-phil directory to populate the thumb field of the phil table
 import re
 from data_storer import *
@@ -9,7 +31,6 @@ def fix_thumb_field():
         id = id_url[0]
         lores_url = id_url[1]
         thumb_url = re.sub('_lores.jpg', '_thumb.jpg', lores_url)
-        #phil_table.insert().execute(id_status_dict)
         update_statement = "update phil set url_to_thumb_img = '" + thumb_url + "' where id = " + str(id) + ";"
         db.execute(update_statement)
 
