@@ -68,24 +68,7 @@ def get_me_a_cookie():
 
 
 def cdc_phil_scrape(id, cj=get_me_a_cookie()):
-	url_to_scrape = 'http://phil.cdc.gov/phil/details.asp'
-	# this post data doesn't seem to really matter, as long as it is correctly formed
-	image_page_post_values = {'count':	'1',
-		'displaymode':	'1',
-		'formaction':	'',
-		'imagelist':	id,
-		'imagesperpage':	'15',
-		'keywords':	'',
-		'mypictures':	'',
-		'page':	'1',
-		'pages':	'1',
-		'philid':	id,
-		'previouskeywords':	'',
-		'referingpagetag':	'',
-		'referingpageurl':	'',
-		'returnpage':	'quicksearch.asp',
-		'searchtype':	'all',
-	}
+	url_to_scrape = 'http://phil.cdc.gov/phil/details.asp?pid=' + str(id)
 
 	urlopen = urllib2.urlopen
 	Request = urllib2.Request
@@ -93,7 +76,6 @@ def cdc_phil_scrape(id, cj=get_me_a_cookie()):
 		print "making a new cookie jar."
 		print "really, this shouldn't be happening.  beware."
 		cj = get_me_a_cookie()
-
 
 	# Now we need to get our Cookie Jar
 	# installed in the opener;
@@ -103,13 +85,11 @@ def cdc_phil_scrape(id, cj=get_me_a_cookie()):
 	opener = urllib2.build_opener(urllib2.HTTPCookieProcessor(cj))
 	urllib2.install_opener(opener)
 
-
-
 	# fake a user agent, some websites (like google) don't like automated exploration
 	txheaders =  {'User-agent' : 'Mozilla/4.0 (compatible; MSIE 5.5; Windows NT)'}
 
 	# finally, we can grab the actual image's page
-	req = Request(url_to_scrape, urllib.urlencode(image_page_post_values), txheaders)
+	req = Request(url_to_scrape, None, txheaders)
 	handle = urlopen(req)
 
 	html = handle.read() #returns the page

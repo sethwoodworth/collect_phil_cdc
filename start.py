@@ -128,7 +128,7 @@ def get_images(root_dir, db_column_name, flag_table, flag_table_object):
     map(queue.put, id_tuples)
 
     # wait on the queue until everything has been processed
-    queue.join()
+    #queue.join()
         
 
 def get_all_images():
