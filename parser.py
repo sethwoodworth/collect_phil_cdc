@@ -45,6 +45,19 @@ def init_dict():
     }
     return metadict
 
+
+def get_first_result_index_from_quick_search_results(html):
+    parser = HTMLParser(tree=treebuilders.getTreeBuilder("beautifulsoup"))
+    soup = parser.parse(html)
+    block = soup.find(border="0", bgcolor="white") # isolate the table of data on the first result
+    id_str = block.find('font').contents[0] #contents of first <font>
+    # this should looke like: 'ID#:11901'
+    # parse out the actual id and cast as int
+    id = int(id_str.partition(':')[2])
+    print id
+    return id
+
+
 def parse_quick_search(html):
     return html
 
