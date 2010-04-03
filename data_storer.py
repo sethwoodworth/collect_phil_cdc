@@ -25,7 +25,7 @@ from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker, mapper
 
 
-db = create_engine('sqlite:///phil.cdc.sql')
+db = create_engine('sqlite:///data/phil.cdc.sql')
 
 #db.echo = True     #uncomment for db debug
 metadata = MetaData(db)

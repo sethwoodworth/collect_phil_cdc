@@ -33,10 +33,10 @@ from parser import *
 
 ## Local configs
 ## Set these as needed locally
-THUMB_IMG_DIR = 'thumbs'
-LORES_IMG_DIR = 'lores'
-HIRES_IMG_DIR = 'hires'
-RAW_HTML_DIR = 'cdc-phil-raw-html'
+THUMB_IMG_DIR = 'data/thumbs'
+LORES_IMG_DIR = 'data/lores'
+HIRES_IMG_DIR = 'data/hires'
+RAW_HTML_DIR = 'data/cdc-phil-raw-html'
 MAX_DAEMONS = 50
 
 def mkdir(dirname):
@@ -250,5 +250,6 @@ def check_latest(start):
 
 if __name__ == '__main__':
     bootstrap_filestructure()
-    cdc_phil_scrape_range(1, 11850)
+    # cdc_phil_scrape_range(1, 11850)
+    cdc_phil_scrape_range(1, 10)
     get_all_images()
