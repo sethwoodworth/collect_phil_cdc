@@ -47,7 +47,10 @@ phil_table = Table('phil', metadata,
     Column('creation', Text),   # Creation Date - When the object was created (photo taken, video shot, etc.)
 
     #TODO: upload exists only here, but we have the data, add it back if exists in fields
-    Column('access_time', DateTime) # seth: time/day we accessed the content
+# I don't even know what the above means any more--i think it refers to a field called "upload" which we seem to not have any more
+    Column('access_time', DateTime), # seth: time/day we accessed the content
+    Column('doesnt_exist', Boolean), # parker: set to true if the image seems to not be in the database
+    Column('we_couldnt_parse_it', Boolean), # parker: set to true if we encountered a parse error when trying to extract the metadata
 )
 
 hires_status_table = Table('hires_status', metadata,
@@ -88,9 +91,12 @@ class Phil(Base):
 #   is_color = Column(Boolean)
     creation = Column(String)
     access_time = Column(Integer)
+    doesnt_exist = Column(Boolean)
+    we_couldnt_parse_it = Column(Boolean)
 
 
-    def __init__(self, id, desc, categories, credit, links, provider, source, url_to_hires_img, url_to_lores_img, url_to_thumb_img, copyright, creation, access_time):
+
+    def __init__(self, id, desc, categories, credit, links, provider, source, url_to_hires_img, url_to_lores_img, url_to_thumb_img, copyright, creation, access_time, doesnt_exist, we_couldnt_parse_it):
         self.id = id
         self.desc = desc
         self.categories = categories
@@ -104,10 +110,12 @@ class Phil(Base):
         self.copyright = copyright
         self.creation = creation
         self.access_time = access_time
+        self.doesnt_exist = Column(Boolean)
+        self.we_couldnt_parse_it = Column(Boolean)
 
 
     def __repr__(self):
-        return "<Phil('%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s')>" % (self.id, self.desc, self.categories, self.credit, self.links, self.provider, self.source, self.url_to_hires_img, self.url_to_lores_img, self.url_to_thumb_img, self.copyright, self.creation, self.upload, self.access_time)
+        return "<Phil('%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s', '%s', '%s')>" % (self.id, self.desc, self.categories, self.credit, self.links, self.provider, self.source, self.url_to_hires_img, self.url_to_lores_img, self.url_to_thumb_img, self.copyright, self.creation, self.upload, self.access_time, self.doesnt_exist, self.we_couldnt_parse_it)
 
 Session = sessionmaker(bind=db)
 session = Session()

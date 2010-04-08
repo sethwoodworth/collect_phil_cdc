@@ -162,7 +162,7 @@ def store_datum(dict):
 
 def cdc_phil_scrape_range(start, end):
     ## main glue function
-    current = start
+    current_id = start
     try:
         cookiejar = get_me_a_cookie()
     except KeyboardInterrupt:
@@ -172,30 +172,30 @@ def cdc_phil_scrape_range(start, end):
         traceback.print_exc()
         return None
     failed_indices = []
-    while current <= end:
-        print "STARTING: " + str(current)
+    while current_id <= end:
+        print "STARTING: " + str(current_id)
         try:
             # 1: fetching html of id, for store and parse
-            html = cdc_phil_scrape(current, cookiejar)
+            html = cdc_phil_scrape(current_id, cookiejar)
         except KeyboardInterrupt:
             sys.exit(0)
         except:
-            print "ERROR: couldn't scrape out html for id " + str(current)
-            failed_indices.append(current)
+            print "ERROR: couldn't scrape out html for id " + str(current_id)
+            failed_indices.append(current_id)
             traceback.print_exc()
-            current+=1
+            current_id+=1
             continue
         # if we didn't get a session error page:
         if not is_session_expired_page(html):
             try:
                 # 2: write html to disk
-                store_raw_html(current, html)
+                store_raw_html(current_id, html)
             except KeyboardInterrupt:
                 sys.exit(0)
             except:
-                print "ERROR: couldn't store raw html for id " + str(current)
-                failed_indices.append(current)
-                current+=1
+                print "ERROR: couldn't store raw html for id " + str(current_id)
+                failed_indices.append(current_id)
+                current_id+=1
                 continue
             try:
                 # 3: parse the metadata out of their html
@@ -203,24 +203,30 @@ def cdc_phil_scrape_range(start, end):
             except KeyboardInterrupt:
                 sys.exit(0)
             except:
-                print "ERROR: couldn't parse raw html for id " + str(current)
-                failed_indices.append(current)
+                print "ERROR: couldn't parse raw html for id " + str(current_id)
+                metadata = {
+                        'id': current_id,
+                        'we_couldnt_parse_it': True,
+                        }
+                store_datum(metadata)
+                print "we just recorded in the DB the fact that we couldn't parse this one"
+                failed_indices.append(current_id)
                 traceback.print_exc()
-                current+=1
+                current_id+=1
                 continue
             try:
                 store_datum(metadata)
             except KeyboardInterrupt:
                 sys.exit(0)
             except:
-                print "ERROR: couldn't store metadata for id " + str(current)
-                failed_indices.append(current)
+                print "ERROR: couldn't store metadata for id " + str(current_id)
+                failed_indices.append(current_id)
                 traceback.print_exc()
-                current+=1
+                current_id+=1
                 continue
             # These lines will only run if everthing went according to plan
-            print "SUCCESS: everything went according to plan for id " + str(current)
-            current+=1
+            print "SUCCESS: everything went according to plan for id " + str(current_id)
+            current_id+=1
         # but if we got a session error page
         else:
             times_to_try_getting_cookie = 3
@@ -249,14 +255,23 @@ def get_highest_index_in_our_db():
     result = int(db.execute(query).fetchall()[0][0])
     return result
 
+def database_is_empty():
+    query = text("select id from phil order by id desc limit 1;")
+    result = db.execute(query).fetchall()
+    return not result
 
 if __name__ == '__main__':
     bootstrap_filestructure()
     # note that we re-do our most recent thing.  just in case we died halfway through it or something
-    start_from = get_highest_index_in_our_db()
-    start_from = 0
+    if database_is_empty():
+        print "looks like the database is empty"
+        start_from = 0
+    else:
+        start_from = get_highest_index_in_our_db()
     end_with = get_highest_index_at_phil()
     end_with = 20
+    print "looks like the highest index in their db is %s, so i'll end with that" % end_with
+    print "i'm about to scrape out raw dumps and grab metadata for %s - %s" % (start_from, end_with)
     cdc_phil_scrape_range(start_from, end_with)
     # don't worry--this only downloads images that we don't already have marked as downloaded in our database
-    get_all_images()
+    # get_all_images()
