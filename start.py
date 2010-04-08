@@ -81,10 +81,13 @@ class ImgDownloader(threading.Thread):
                 url = id_url_tuple[1]
                 path = './' + self.root_dir + '/' + floorify(id) + '/' + str(id).zfill(5) + url[-4:]
                 urllib.urlretrieve(url, path)
+                print "finished downloading " + url
                 id_status_dict = {'id': id, 'status': 1}
                 # signal to db that we're done downloading
                 with db_lock:
                     self.flag_table_object.insert().execute(id_status_dict)
+                    print "finished marking as downloaded" + url
+
                 # signals to queue job is done
                 self.queue.task_done()
             except KeyboardInterrupt:
@@ -107,15 +110,18 @@ def get_images(root_dir, db_column_name, flag_table, flag_table_object):
         t.setDaemon(True)
         t.start()
 
+    # TODO: this solution is saddening. it's roundabout and icky. we did it because we suck at databases
+    # get urls for all the images
     query = text("select id," + db_column_name + " from phil where " + db_column_name + "  != '';")
     ids_and_urls = db.execute(query).fetchall()
     id_dict = dict(ids_and_urls)
 
+    # get the ids for all the images that we've already downloaded
     query = text("select id from " + flag_table + " where status = '1';")
     ids_to_remove = db.execute(query).fetchall()
     rm_dict = map((lambda tuple: tuple[0]), ids_to_remove)
 
-
+    # remove them from our dict of urls to download images from
     for id_rm in rm_dict:
         del id_dict[id_rm]
 
@@ -128,7 +134,7 @@ def get_images(root_dir, db_column_name, flag_table, flag_table_object):
     map(queue.put, id_tuples)
 
     # wait on the queue until everything has been processed
-    #queue.join()
+    queue.join()
         
 
 def get_all_images():
@@ -238,18 +244,19 @@ def cdc_phil_scrape_range(start, end):
         print "Failed at " + str(len(failed_indices)) + " indices :"
         print failed_indices
 
-def check_latest(start):
-    check_start(start)
+def get_highest_index_in_our_db():
     query = text("select id from phil order by id desc limit 1;")
-    results = int(table.execute(query).fetchall())
-    if results > start:
-        return results
-    else:
-        return start
+    result = int(db.execute(query).fetchall()[0][0])
+    return result
 
 
 if __name__ == '__main__':
     bootstrap_filestructure()
-    # cdc_phil_scrape_range(1, 11850)
-    cdc_phil_scrape_range(1, 10)
+    # note that we re-do our most recent thing.  just in case we died halfway through it or something
+    start_from = get_highest_index_in_our_db()
+    start_from = 0
+    end_with = get_highest_index_at_phil()
+    end_with = 20
+    cdc_phil_scrape_range(start_from, end_with)
+    # don't worry--this only downloads images that we don't already have marked as downloaded in our database
     get_all_images()

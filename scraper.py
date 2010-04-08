@@ -70,7 +70,7 @@ def get_me_a_cookie():
 # this is basically the same process as the cookie-getting, except we do just a bit of parsing of the resultant search page
 # we search for the space character. this /seems to/ give us every single image, ordered by index descending.
 # so the highest index is the first one displayed in the search results!
-def get_highest_image_index():
+def get_highest_index_at_phil():
     quicksearch_page_post_values = {
         'formaction':	'SEARCH',
         'illustrations':	'on',
