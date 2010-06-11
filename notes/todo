@@ -12,13 +12,15 @@ uploads
 * character encoding unicode craziness issue
 * fix up MESH -- the tagging thing
 ** figure out what data structure to use, then step through the database and make it use said datastructure--nested dict?
-* bug: we have copyright info for everything in the database, but it's not displaying on our mirror
 * make it so that we have a cronjob that keeps our data in sync with the live cdc site's
     * get highest id from our database
     * get highest id from their database
     * scrape out the difference and only the difference
     * put the difference on the mirror site
     * better automatic sqlite -> mysql conversion
+
+* mirror site should notice where there are holes and store in the db info about what the next viable id is and what the prev viable id is
+** this way we don't have to use our hackey workaround to deal with holes in the database
 
 * include a contact email and maybe names on the site.
 
