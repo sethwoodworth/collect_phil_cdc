@@ -1,5 +1,30 @@
+seth:
+* sqlalchemy script to move from sqlite to mysql automagically
+* uploads
+
+parker: everything else. the little bugs.
 
 
+uploads
+* archive.org
+* wikimedia commons
+
+* character encoding unicode craziness issue
+* fix up MESH -- the tagging thing
+** figure out what data structure to use, then step through the database and make it use said datastructure--nested dict?
+* bug: we have copyright info for everything in the database, but it's not displaying on our mirror
+* make it so that we have a cronjob that keeps our data in sync with the live cdc site's
+    * get highest id from our database
+    * get highest id from their database
+    * scrape out the difference and only the difference
+    * put the difference on the mirror site
+    * better automatic sqlite -> mysql conversion
+
+* include a contact email and maybe names on the site.
+
+
+then:
+* hook in ian's code for some additional metadata
 
 
 next actions:
