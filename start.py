@@ -263,13 +263,14 @@ def database_is_empty():
 if __name__ == '__main__':
     bootstrap_filestructure()
     # note that we re-do our most recent thing.  just in case we died halfway through it or something
+    # note also that we don't download any images until we run get_all_images()
     if database_is_empty():
         print "looks like the database is empty"
         start_from = 0
     else:
         start_from = get_highest_index_in_our_db()
     end_with = get_highest_index_at_phil()
-    end_with = 20
+    end_with = 500
     print "looks like the highest index in their db is %s, so i'll end with that" % end_with
     print "i'm about to scrape out raw dumps and grab metadata for %s - %s" % (start_from, end_with)
     cdc_phil_scrape_range(start_from, end_with)

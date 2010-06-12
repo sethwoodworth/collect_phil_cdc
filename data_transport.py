@@ -25,7 +25,8 @@ from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker, mapper
 
 
-db = create_engine('mysql://root@localhost/phil')
+#db = create_engine('mysql://root@localhost/phil')
+db = create_engine('mysql://phil:toast@localhost/cdc_phil_data_test')
 
 metadata = MetaData(bind=db)
 
@@ -49,39 +50,41 @@ phil_table = Table('phil', metadata,
     Column('access_time', DateTime), # seth: time/day we accessed the content
     mysql_charset='utf8'
 )
-
-hires_status_table = Table('hires_status', metadata,
-    Column('id', Integer, primary_key=True),
-    Column('status', Boolean),
-    mysql_charset='utf8'
-)
-
-lores_status_table = Table('lores_status', metadata,
-    Column('id', Integer, primary_key=True),
-    Column('status', Boolean),
-    mysql_charset='utf8'
-)
-
-thumb_status_table = Table('thumb_status', metadata,
-    Column('id', Integer, primary_key=True),
-    Column('status', Boolean),
-    mysql_charset='utf8'
-)
+#
+#hires_status_table = Table('hires_status', metadata,
+#    Column('id', Integer, primary_key=True),
+#    Column('status', Boolean),
+#    mysql_charset='utf8'
+#)
+#
+#lores_status_table = Table('lores_status', metadata,
+#    Column('id', Integer, primary_key=True),
+#    Column('status', Boolean),
+#    mysql_charset='utf8'
+#)
+#
+#thumb_status_table = Table('thumb_status', metadata,
+#    Column('id', Integer, primary_key=True),
+#    Column('status', Boolean),
+#    mysql_charset='utf8'
+#)
 
 metadata.create_all(db)
 
 table = phil_table.insert()
 
-def table_iterate(table_name, db2):
-    result = db2.execute(table_name.select())
-    for row in result:
-        table_name.insert().execute(row)
-    result.close()
-
 def from_sqlite_to_mysql():
     db2 = create_engine('sqlite:///full.sql')
-    for table in [phil_table, hires_status_table, lores_status_table]:
-        table_iterate(table, db2)
+    connection2 = db2.connect()
+    
+    #for table in metadata.table_iterator(reverse=False):
+    table = phil_table
+    result = connection2.execute("select * from %s" % table.name)
+    for row in result:
+        print "oi\n"
+        table.insert().execute(row)
+    result.close()
+    connection2.close()
 
     
 if __name__ == '__main__':
