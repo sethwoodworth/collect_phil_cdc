@@ -266,13 +266,16 @@ if __name__ == '__main__':
     # note also that we don't download any images until we run get_all_images()
     if database_is_empty():
         print "looks like the database is empty"
-        start_from = 0
+        start_from = 1
     else:
         start_from = get_highest_index_in_our_db()
     end_with = get_highest_index_at_phil()
     end_with = 500
-    print "looks like the highest index in their db is %s, so i'll end with that" % end_with
-    print "i'm about to scrape out raw dumps and grab metadata for %s - %s" % (start_from, end_with)
-    cdc_phil_scrape_range(start_from, end_with)
+    if start_from == end_with:
+        print "looks like our database is already up to date. i wont scrape anything, but i might grab some images if we need them"
+    else:
+        print "looks like the highest index in their db is %s, so i'll end with that" % end_with
+        print "i'm about to scrape out raw dumps and grab metadata for %s - %s" % (start_from, end_with)
+        cdc_phil_scrape_range(start_from, end_with)
     # don't worry--this only downloads images that we don't already have marked as downloaded in our database
-    # get_all_images()
+    get_all_images()

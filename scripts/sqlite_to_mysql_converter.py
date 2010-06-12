@@ -26,7 +26,8 @@ from sqlalchemy.orm import sessionmaker, mapper
 
 
 #db = create_engine('mysql://root@localhost/phil')
-db = create_engine('mysql://phil:toast@localhost/cdc_phil_data_test')
+#db = create_engine('mysql://phil:toast@localhost/cdc_phil_data_test')
+db = create_engine('mysql://phil:toast@localhost/cdc_phil_data')
 
 metadata = MetaData(bind=db)
 
@@ -81,7 +82,6 @@ def from_sqlite_to_mysql():
     table = phil_table
     result = connection2.execute("select * from %s" % table.name)
     for row in result:
-        print "oi\n"
         table.insert().execute(row)
     result.close()
     connection2.close()
