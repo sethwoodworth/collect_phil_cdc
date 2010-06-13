@@ -153,12 +153,56 @@ def store_raw_html(id, html):
     fp.write(html)
     fp.close()
 
+def get_local_raw_html(id):
+    idstr = str(id).zfill(5)
+    floor = id - (id%100)
+    ceiling = str(floor + 100).zfill(5)
+    floor = str(floor).zfill(5)
+    html = open(RAW_HTML_DIR + '/' + floor + '-' + ceiling + '/' + idstr + '.html', 'r').read()
+    return html
+
 
 def store_datum(dict):
     ## stores scraped metadata into phil table
     # TODO: incorporate this into main function
     # TODO: 'table' is a db storage object so isn't descriptive
     table.execute(dict)
+
+def cdc_phil_scrape_range_from_hd(start, end):
+    current_id = start
+    failed_indices = []
+    while current_id <= end:
+        try:
+            # 3: parse the metadata out of their html
+            html = get_local_raw_html(current_id)
+            metadata = parse_img(html)
+        except KeyboardInterrupt:
+            sys.exit(0)
+        except:
+            print "ERROR: couldn't parse raw html for id " + str(current_id)
+            metadata = {
+                    'id': current_id,
+                    'we_couldnt_parse_it': True,
+                    }
+            store_datum(metadata)
+            print "we just recorded in the DB the fact that we couldn't parse this one"
+            failed_indices.append(current_id)
+            traceback.print_exc()
+            current_id+=1
+            continue
+        try:
+            store_datum(metadata)
+        except KeyboardInterrupt:
+            sys.exit(0)
+        except:
+            print "ERROR: couldn't store metadata for id " + str(current_id)
+            failed_indices.append(current_id)
+            traceback.print_exc()
+            current_id+=1
+            continue
+        # These lines will only run if everthing went according to plan
+        print "SUCCESS: everything went according to plan for id " + str(current_id)
+        current_id+=1
 
 def cdc_phil_scrape_range(start, end):
     ## main glue function
@@ -261,7 +305,13 @@ def database_is_empty():
     return not result
 
 if __name__ == '__main__':
-    bootstrap_filestructure()
+    # NOTE: if you don't set these the right way, you'll never even touch their servers
+    work_locally = True
+    get_images = False
+    #end_with = get_highest_index_at_phil()
+    end_with = 500
+
+
     # note that we re-do our most recent thing.  just in case we died halfway through it or something
     # note also that we don't download any images until we run get_all_images()
     if database_is_empty():
@@ -269,13 +319,16 @@ if __name__ == '__main__':
         start_from = 1
     else:
         start_from = get_highest_index_in_our_db()
-    end_with = get_highest_index_at_phil()
-    end_with = 500
     if start_from == end_with:
         print "looks like our database is already up to date. i wont scrape anything, but i might grab some images if we need them"
     else:
         print "looks like the highest index in their db is %s, so i'll end with that" % end_with
         print "i'm about to scrape out raw dumps and grab metadata for %s - %s" % (start_from, end_with)
-        cdc_phil_scrape_range(start_from, end_with)
+        if work_locally:
+            cdc_phil_scrape_range_from_hd(start_from, end_with)
+        else:
+            bootstrap_filestructure()
+            cdc_phil_scrape_range(start_from, end_with)
     # don't worry--this only downloads images that we don't already have marked as downloaded in our database
-    get_all_images()
+    if get_images:
+        get_all_images()

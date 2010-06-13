@@ -92,14 +92,12 @@ README
         the format for "links" field
         the format for the categories field
         the fact that we have single quotes in places
-        the fact that we have wrapped td tags in some places
 
 better var names
 hook in ian's stuff
     add metadata that isn't reported but is accessible from search
     image analytics (color/not, size, etc)
 parser is smarter--
-    remove td tags surrounding a couple things
     knows if we're looking at the page for an id that doesn't exist
 handle the case where we get id collisions
     for metadata scraping--we already handle this well for image download
