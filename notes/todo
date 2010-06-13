@@ -1,5 +1,4 @@
 seth:
-* sqlalchemy script to move from sqlite to mysql automagically
 * uploads
 
 parker: everything else. the little bugs.
@@ -10,14 +9,19 @@ uploads
 * wikimedia commons
 
 * character encoding unicode craziness issue
+** we can convert to mysql just fine--we just need to be able to turn the frontslash-encoded things into real characters
 * fix up MESH -- the tagging thing
-** figure out what data structure to use, then step through the database and make it use said datastructure--nested dict?
+** should use nested dicts, storing the __repr__() of them
+** need to write php parser. also, python parser.
 * make it so that we have a cronjob that keeps our data in sync with the live cdc site's
+    * note: most of this is done. stuff just needs to be glued together
     * get highest id from our database
     * get highest id from their database
     * scrape out the difference and only the difference
     * put the difference on the mirror site
     * better automatic sqlite -> mysql conversion
+
+* code to parse the downloaded html instead of the live stuff
 
 * mirror site should notice where there are holes and store in the db info about what the next viable id is and what the prev viable id is
 ** this way we don't have to use our hackey workaround to deal with holes in the database

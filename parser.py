@@ -61,6 +61,13 @@ def get_first_result_index_from_quick_search_results(html):
 def parse_quick_search(html):
     return html
 
+def remove_surrounding_td_tags(str):
+    # get the first one
+    str = str.split("<td>")[1]
+    split = str.split("</td>")
+    str = split[len(split)-2]
+    return str
+
 def parse_img(html):
     metadict = init_dict()
     # soupify the html
@@ -95,7 +102,7 @@ def parse_img(html):
                 fieldValue = rowContents('td')[1]
                 if fieldName == 'Description:':
                     if fieldValue.contents:
-                        metadict['desc'] = unicode(repr(str(fieldValue)))
+                        metadict['desc'] = unicode(remove_surrounding_td_tags(repr(str(fieldValue))))
                 elif fieldName == 'Content Providers(s):':
                     if fieldValue.contents:
                         metadict['provider'] = fieldValue.contents[0]
