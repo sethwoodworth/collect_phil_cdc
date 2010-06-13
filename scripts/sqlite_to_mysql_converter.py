@@ -24,10 +24,11 @@ from sqlalchemy import *
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker, mapper
 
+# NOTE: this must be run form the root of this repo
+from data_storer import *
 
-#db = create_engine('mysql://root@localhost/phil')
-#db = create_engine('mysql://phil:toast@localhost/cdc_phil_data_test')
-db = create_engine('mysql://phil:toast@localhost/cdc_phil_data')
+from credentials import *
+db = create_engine('mysql://%s:%s@%s/%s' % (data_mysql_db_user, data_mysql_db_pass, data_mysql_db_host, data_mysql_db_db))
 
 metadata = MetaData(bind=db)
 
@@ -51,32 +52,13 @@ phil_table = Table('phil', metadata,
     Column('access_time', DateTime), # seth: time/day we accessed the content
     mysql_charset='utf8'
 )
-#
-#hires_status_table = Table('hires_status', metadata,
-#    Column('id', Integer, primary_key=True),
-#    Column('status', Boolean),
-#    mysql_charset='utf8'
-#)
-#
-#lores_status_table = Table('lores_status', metadata,
-#    Column('id', Integer, primary_key=True),
-#    Column('status', Boolean),
-#    mysql_charset='utf8'
-#)
-#
-#thumb_status_table = Table('thumb_status', metadata,
-#    Column('id', Integer, primary_key=True),
-#    Column('status', Boolean),
-#    mysql_charset='utf8'
-#)
 
 metadata.create_all(db)
 
 table = phil_table.insert()
 
-def from_sqlite_to_mysql():
-    db2 = create_engine('sqlite:///full.sql')
-    connection2 = db2.connect()
+def from_sqlite_to_mysql(db1, connection=Null, db2, connection2):
+    #db2 = create_engine('sqlite:///full.sql')
     
     #for table in metadata.table_iterator(reverse=False):
     table = phil_table
@@ -88,4 +70,6 @@ def from_sqlite_to_mysql():
 
     
 if __name__ == '__main__':
-    from_sqlite_to_mysql()
+    db2 = create_engine('sqlite://%s:%s@%s/%s' % (data_sqlite_db_user, data_sqlite_db_pass, data_sqlite_db_host, data_sqlite_db_db))
+    connection2 = db2.connect()
+    from_sqlite_to_mysql(db1, connection, db2, connection2)

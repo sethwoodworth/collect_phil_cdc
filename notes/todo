@@ -3,7 +3,7 @@ seth:
 
 parker:
 * we start hosting a tarball torrent
-* get the self-reloading chronjob happytime setup
+* get the self-reloading cronjob happytime setup
 
 
 bug: live site is missing image for id 991
@@ -15,7 +15,7 @@ uploads
 
 * bug: i think that the image downloader doesn't report success at the end. it seems to hang. maybe one of the threads is stalled?
 * bug links can have unicode chars also--encoded in this one other way. should be fixt.
-* trivial: remove the old sqlite->mysql conversion stuff from the publish repo
+** example: id 336
 * trivial: good documentation of the conversion scripts
 * fix up MESH -- the tagging thing
 ** should use nested dicts, storing the repr() of them

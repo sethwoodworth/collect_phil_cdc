@@ -105,25 +105,14 @@ def get_images(root_dir, db_column_name, flag_table, flag_table_object):
     ## returns: images to folder structure and stores downloaded status table
     queue = Queue.Queue()
     # MAKE OUR THREADZZZ
+    # note: they wont do anything until we put stuff in the queue
     for i in range(MAX_DAEMONS):
         t = ImgDownloader(queue, root_dir, flag_table_object)
         t.setDaemon(True)
         t.start()
 
-    # TODO: this solution is saddening. it's roundabout and icky. we did it because we suck at databases
-    # get urls for all the images
-    query = text("select id," + db_column_name + " from phil where " + db_column_name + "  != '';")
-    ids_and_urls = db.execute(query).fetchall()
-    id_dict = dict(ids_and_urls)
-
-    # get the ids for all the images that we've already downloaded
-    query = text("select id from " + flag_table + " where status = 1;")
-    ids_to_remove = db.execute(query).fetchall()
-    rm_dict = map((lambda tuple: tuple[0]), ids_to_remove)
-
-    # remove them from our dict of urls to download images from
-    for id_rm in rm_dict:
-        del id_dict[id_rm]
+    #dict of urls to download images from
+    id_dict = get_dict_of_images_to_dl(db_column_name, flag_table)
 
     # generate list of ids from results dict
     ids = id_dict.keys()
@@ -161,12 +150,6 @@ def get_local_raw_html(id):
     html = open(RAW_HTML_DIR + '/' + floor + '-' + ceiling + '/' + idstr + '.html', 'r').read()
     return html
 
-
-def store_datum(dict):
-    ## stores scraped metadata into phil table
-    # TODO: incorporate this into main function
-    # TODO: 'table' is a db storage object so isn't descriptive
-    table.execute(dict)
 
 def cdc_phil_scrape_range_from_hd(start, end):
     current_id = start
@@ -294,22 +277,12 @@ def cdc_phil_scrape_range(start, end):
         print "Failed at " + str(len(failed_indices)) + " indices :"
         print failed_indices
 
-def get_highest_index_in_our_db():
-    query = text("select id from phil order by id desc limit 1;")
-    result = int(db.execute(query).fetchall()[0][0])
-    return result
-
-def database_is_empty():
-    query = text("select id from phil order by id desc limit 1;")
-    result = db.execute(query).fetchall()
-    return not result
-
 if __name__ == '__main__':
     # NOTE: if you don't set these the right way, you'll never even touch their servers
-    WORK_LOCALLY = True
+    WORK_LOCALLY = False
     GET_IMAGES = True
     #end_with = get_highest_index_at_phil()
-    end_with = 500
+    end_with = 510
 
 
     # note that we re-do our most recent thing.  just in case we died halfway through it or something
