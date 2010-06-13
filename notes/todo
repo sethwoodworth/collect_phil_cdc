@@ -1,18 +1,27 @@
 seth:
-* uploads
+* start looking at uploads
 
-parker: everything else. the little bugs.
+parker:
+* we start hosting a tarball torrent
+* get the self-reloading chronjob happytime setup
 
+
+bug: live site is missing image for id 991
 
 uploads
 * archive.org
 * wikimedia commons
+    http://commons.wikimedia.org/wiki/Commons:Batch_uploading
 
-* character encoding unicode craziness issue
-** we can convert to mysql just fine--we just need to be able to turn the frontslash-encoded things into real characters
+* bug: i think that the image downloader doesn't report success at the end. it seems to hang. maybe one of the threads is stalled?
+* bug links can have unicode chars also--encoded in this one other way. should be fixt.
+* trivial: remove the old sqlite->mysql conversion stuff from the publish repo
+* trivial: good documentation of the conversion scripts
 * fix up MESH -- the tagging thing
-** should use nested dicts, storing the __repr__() of them
+** should use nested dicts, storing the repr() of them
 ** need to write php parser. also, python parser.
+** maybe store both repr() and pickles(). because pickling is standard and easy in python land
+** or, maybe instead of repr we store the phpserialzed version--because we know that php can unserialze that! hah, brilliant!
 * make it so that we have a cronjob that keeps our data in sync with the live cdc site's
     * note: most of this is done. stuff just needs to be glued together
     * get highest id from our database
@@ -20,8 +29,6 @@ uploads
     * scrape out the difference and only the difference
     * put the difference on the mirror site
     * better automatic sqlite -> mysql conversion
-
-* code to parse the downloaded html instead of the live stuff
 
 * mirror site should notice where there are holes and store in the db info about what the next viable id is and what the prev viable id is
 ** this way we don't have to use our hackey workaround to deal with holes in the database
