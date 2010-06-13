@@ -117,7 +117,7 @@ def get_images(root_dir, db_column_name, flag_table, flag_table_object):
     id_dict = dict(ids_and_urls)
 
     # get the ids for all the images that we've already downloaded
-    query = text("select id from " + flag_table + " where status = '1';")
+    query = text("select id from " + flag_table + " where status = 1;")
     ids_to_remove = db.execute(query).fetchall()
     rm_dict = map((lambda tuple: tuple[0]), ids_to_remove)
 
@@ -306,8 +306,8 @@ def database_is_empty():
 
 if __name__ == '__main__':
     # NOTE: if you don't set these the right way, you'll never even touch their servers
-    work_locally = True
-    get_images = False
+    WORK_LOCALLY = True
+    GET_IMAGES = True
     #end_with = get_highest_index_at_phil()
     end_with = 500
 
@@ -324,11 +324,11 @@ if __name__ == '__main__':
     else:
         print "looks like the highest index in their db is %s, so i'll end with that" % end_with
         print "i'm about to scrape out raw dumps and grab metadata for %s - %s" % (start_from, end_with)
-        if work_locally:
+        if WORK_LOCALLY:
             cdc_phil_scrape_range_from_hd(start_from, end_with)
         else:
             bootstrap_filestructure()
             cdc_phil_scrape_range(start_from, end_with)
     # don't worry--this only downloads images that we don't already have marked as downloaded in our database
-    if get_images:
+    if GET_IMAGES:
         get_all_images()

@@ -57,16 +57,20 @@ hires_status_table = Table('hires_status', metadata,
     Column('id', Integer, primary_key=True),
     Column('status', Boolean)
 )
+hires_status_table.insert()
 
 lores_status_table = Table('lores_status', metadata,
     Column('id', Integer, primary_key=True),
     Column('status', Boolean),
 )
+lores_status_table.insert()
 
 thumb_status_table = Table('thumb_status', metadata,
     Column('id', Integer, primary_key=True),
     Column('status', Boolean),
 )
+thumb_status_table.insert()
+
 
 metadata.create_all(db)
 
