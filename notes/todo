@@ -1,12 +1,8 @@
 right now:
 finishing cronjob stuff
 
-the wp database conversion and hacking happens incrementally, for maximum efficiency
-* so first step is generalizing the max_id thing
-
 ability to run our re_parse_all_metadata script function
 * start.py takes command-line args, maybe
-
 
 seth:
 * start looking at uploads
