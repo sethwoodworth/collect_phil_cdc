@@ -25,6 +25,7 @@ from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker, mapper
 
 
+from credentials import *
 data_sqlite_db = create_engine('sqlite://%s:%s@%s/%s' % (data_sqlite_db_user, data_sqlite_db_pass, data_sqlite_db_host, data_sqlite_db_db))
 
 #data_sqlite_db.echo = True     #uncomment for db debug
@@ -122,17 +123,21 @@ class Phil(Base):
         return "<Phil('%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s', '%s', '%s')>" % (self.id, self.desc, self.categories, self.credit, self.links, self.provider, self.source, self.url_to_hires_img, self.url_to_lores_img, self.url_to_thumb_img, self.copyright, self.creation, self.upload, self.access_time, self.doesnt_exist, self.we_couldnt_parse_it)
 
 Session = sessionmaker(bind=data_sqlite_db)
-session = Session()
+data_sqlite_session = Session()
 
 table = phil_table.insert()
 
 #table.execute(metadata)
 #table.commit()
 
+def get_highest_index_in_table(session, table_obj):
+    return int(session.query(table_obj.id).order_by(desc(table_obj.id)).first()[0])
+
 def get_highest_index_in_our_db():
-    query = text("select id from phil order by id desc limit 1;")
-    result = int(data_sqlite_db.execute(query).fetchall()[0][0])
-    return result
+    return get_highest_index_in_table(data_sqlite_session, Phil)
+    #query = text("select id from phil order by id desc limit 1;")
+    #result = int(data_sqlite_db.execute(query).fetchall()[0][0])
+    #return result
 
 def database_is_empty():
     query = text("select id from phil order by id desc limit 1;")
@@ -144,7 +149,6 @@ def store_datum(dict):
     # TODO: incorporate this into main function
     # TODO: 'table' is a db storage object so isn't descriptive
     table.execute(dict)
-
 
 def get_dict_of_images_to_dl(db_column_name, flag_table):
     # TODO: this solution is saddening. it's roundabout and icky. we did it because we suck at databases

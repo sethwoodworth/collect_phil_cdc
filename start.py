@@ -62,7 +62,7 @@ def make_directories(ids, root_dir):
     # convert the floors into strings of format like 015XX
     map((lambda dirname: mkdir(root_dir + '/' + dirname)), floor_dirs)
 
-# hug thanks to http://www.ibm.com/developerworks/aix/library/au-threadingpython/
+# huge thanks to http://www.ibm.com/developerworks/aix/library/au-threadingpython/
 # this threading code is mostly from there
 db_lock = threading.RLock()
 class ImgDownloader(threading.Thread):
@@ -277,12 +277,22 @@ def cdc_phil_scrape_range(start, end):
         print "Failed at " + str(len(failed_indices)) + " indices :"
         print failed_indices
 
+
+# run this if you update the parser in a way that should affect the whole dataset
+# this will use the local copies of the html, not the live ones on the cdc site
+# TODO: untested so far
+def re_parse_all_metadata():
+    #TODO: truncate the current db... also, maybe back it up first?
+    start_from = 1
+    cdc_phil_scrape_range_from_hd(start_from, end_with)
+
+
 if __name__ == '__main__':
     # NOTE: if you don't set these the right way, you'll never even touch their servers
     WORK_LOCALLY = False
     GET_IMAGES = True
     #end_with = get_highest_index_at_phil()
-    end_with = 510
+    end_with = 525
 
 
     # note that we re-do our most recent thing.  just in case we died halfway through it or something
@@ -291,8 +301,8 @@ if __name__ == '__main__':
         print "looks like the database is empty"
         start_from = 1
     else:
-        start_from = get_highest_index_in_our_db()
-    if start_from == end_with:
+        start_from = get_highest_index_in_our_db() + 1
+    if start_from >= end_with:
         print "looks like our database is already up to date. i wont scrape anything, but i might grab some images if we need them"
     else:
         print "looks like the highest index in their db is %s, so i'll end with that" % end_with

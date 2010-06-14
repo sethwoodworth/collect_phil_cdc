@@ -28,11 +28,11 @@ from sqlalchemy.orm import sessionmaker, mapper
 from data_storer import *
 
 from credentials import *
-db = create_engine('mysql://%s:%s@%s/%s' % (data_mysql_db_user, data_mysql_db_pass, data_mysql_db_host, data_mysql_db_db))
+data_mysql_db = create_engine('mysql://%s:%s@%s/%s' % (data_mysql_db_user, data_mysql_db_pass, data_mysql_db_host, data_mysql_db_db))
 
-metadata = MetaData(bind=db)
+metadata = MetaData(bind=data_mysql_db)
 
-phil_table = Table('phil', metadata,
+mysql_phil_table = Table('phil', metadata,
     Column('id', Integer, primary_key=True),
     Column('desc', Text),         # Description - Extensive and authoritative explanation of the visual image or video file
     Column('categories', Text),   # Categories - used to describe the image
@@ -53,23 +53,38 @@ phil_table = Table('phil', metadata,
     mysql_charset='utf8'
 )
 
-metadata.create_all(db)
+metadata.create_all(data_mysql_db)
 
-table = phil_table.insert()
+mysql_phil_table.insert()
 
-def from_sqlite_to_mysql(db1, connection=Null, db2, connection2):
-    #db2 = create_engine('sqlite:///full.sql')
-    
-    #for table in metadata.table_iterator(reverse=False):
-    table = phil_table
-    result = connection2.execute("select * from %s" % table.name)
+data_mysql_db_connection = data_mysql_db.connect()
+
+# convert only the unconverted (meaning "new") lines int he sqlite into mysql (just grab and store)
+def from_sqlite_to_mysql(sqlite_connection, mysql_table_obj):
+    # get highest index in the mysql data table
+    query = text("SELECT id FROM `phil` ORDER BY `id` DESC limit 1;")
+    data_mysql_db_max_id = int(data_mysql_db_connection.execute(query).fetchall()[0][0])
+
+    # grab all the new stuff from the sqlite
+    result = sqlite_connection.execute("select * from %s where id > %d" % (mysql_table_obj.name, data_mysql_db_max_id))
+    # and put it in
     for row in result:
-        table.insert().execute(row)
+        mysql_table_obj.insert().execute(row)
     result.close()
-    connection2.close()
+
+def hack_wp_db():
+    db = create_engine('mysql://%s:%s@%s/%s' % (wp_db_user, wp_db_pass, wp_db_host, wp_db_db))
+    connection = db.connect()
+    # get highest index in the table of posts
+    query = text("SELECT id FROM `wp_posts` ORDER BY `id` DESC limit 1;")
+    highest_post_index = int(db.execute(query).fetchall()[0][0])
+    highest_data_index = get_highest_index_in_our_db()
+    num_posts_to_add = highest_data_index - highest_post_index
+    for i in range(num_posts_to_add):
+        connection.execute('INSERT INTO wp_posts (post_type) VALUES ("page");');
 
     
 if __name__ == '__main__':
-    db2 = create_engine('sqlite://%s:%s@%s/%s' % (data_sqlite_db_user, data_sqlite_db_pass, data_sqlite_db_host, data_sqlite_db_db))
-    connection2 = db2.connect()
-    from_sqlite_to_mysql(db1, connection, db2, connection2)
+    # we already have a database and a session defined in data_storer.py
+    from_sqlite_to_mysql(data_sqlite_session, mysql_phil_table)
+    hack_wp_db()

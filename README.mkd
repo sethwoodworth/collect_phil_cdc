@@ -1,6 +1,10 @@
 Collect Public Health Images
 ============================
 
+BEFORE YOU DO ANYTHING ELSE:
+copy credentials-sample.py to credentials.py and make the necessary changes
+otherwise nothing will work
+
 Requirements
 ------------
 These scripts require the following modules

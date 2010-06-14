@@ -1,3 +1,13 @@
+right now:
+finishing cronjob stuff
+
+the wp database conversion and hacking happens incrementally, for maximum efficiency
+* so first step is generalizing the max_id thing
+
+ability to run our re_parse_all_metadata script function
+* start.py takes command-line args, maybe
+
+
 seth:
 * start looking at uploads
 
@@ -14,14 +24,20 @@ uploads
     http://commons.wikimedia.org/wiki/Commons:Batch_uploading
 
 * bug: i think that the image downloader doesn't report success at the end. it seems to hang. maybe one of the threads is stalled?
+** a few trials: at the end of a super long scrape it seems to hang. however, once it's restarted after that, it finished just fine.
+** yeah, i've had 2 successful runs with small ranges of images to download (5 and 10, i think)
+
 * bug links can have unicode chars also--encoded in this one other way. should be fixt.
 ** example: id 336
+
 * trivial: good documentation of the conversion scripts
+
 * fix up MESH -- the tagging thing
 ** should use nested dicts, storing the repr() of them
 ** need to write php parser. also, python parser.
 ** maybe store both repr() and pickles(). because pickling is standard and easy in python land
 ** or, maybe instead of repr we store the phpserialzed version--because we know that php can unserialze that! hah, brilliant!
+
 * make it so that we have a cronjob that keeps our data in sync with the live cdc site's
     * note: most of this is done. stuff just needs to be glued together
     * get highest id from our database
