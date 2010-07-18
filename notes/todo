@@ -1,3 +1,9 @@
+right now:
+finishing cronjob stuff
+
+ability to run our re_parse_all_metadata script function
+* start.py takes command-line args, maybe
+
 seth:
 * start looking at uploads
 
@@ -7,9 +13,6 @@ parker:
 
 
 bug: live site is missing image for id 991
-
-ability to run our re_parse_all_metadata script function
-* start.py takes command-line args, maybe
 
 uploads
 * archive.org
