@@ -5,7 +5,6 @@ parker:
 * we start hosting a tarball torrent
 * get the self-reloading cronjob happytime setup
 
-
 bug: live site is missing image for id 991
 
 ability to run our re_parse_all_metadata script function

@@ -31,13 +31,7 @@ from scraper import *
 from data_storer import *
 from parser import *
 
-## Local configs
-## Set these as needed locally
-THUMB_IMG_DIR = 'data/thumbs'
-LORES_IMG_DIR = 'data/lores'
-HIRES_IMG_DIR = 'data/hires'
-RAW_HTML_DIR = 'data/cdc-phil-raw-html'
-MAX_DAEMONS = 50
+from config import *
 
 def mkdir(dirname):
     if not os.path.isdir("./" + dirname + "/"):
