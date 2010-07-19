@@ -62,8 +62,12 @@ data_mysql_db_connection = data_mysql_db.connect()
 # convert only the unconverted (meaning "new") lines int he sqlite into mysql (just grab and store)
 def from_sqlite_to_mysql(sqlite_connection, mysql_table_obj):
     # get highest index in the mysql data table
-    query = text("SELECT id FROM `phil` ORDER BY `id` DESC limit 1;")
-    data_mysql_db_max_id = int(data_mysql_db_connection.execute(query).fetchall()[0][0])
+    try:
+        query = text("SELECT id FROM `phil` ORDER BY `id` DESC limit 1;")
+        data_mysql_db_max_id = int(data_mysql_db_connection.execute(query).fetchall()[0][0])
+    except IndexError:
+        # in this edge case, we have ZERO posts in the mysql data database
+        data_mysql_db_max_id = (-1)
 
     # grab all the new stuff from the sqlite
     result = sqlite_connection.execute("select * from %s where id > %d" % (mysql_table_obj.name, data_mysql_db_max_id))
