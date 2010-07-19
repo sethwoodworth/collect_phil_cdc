@@ -77,7 +77,11 @@ def hack_wp_db():
     connection = db.connect()
     # get highest index in the table of posts
     query = text("SELECT id FROM `wp_posts` ORDER BY `id` DESC limit 1;")
-    highest_post_index = int(db.execute(query).fetchall()[0][0])
+    try:
+        highest_post_index = int(db.execute(query).fetchall()[0][0])
+    except IndexError:
+        # in this case, we have ZERO posts in the wp database
+        highest_post_index = (-1)
     highest_data_index = get_highest_index_in_our_db()
     num_posts_to_add = highest_data_index - highest_post_index
     for i in range(num_posts_to_add):
