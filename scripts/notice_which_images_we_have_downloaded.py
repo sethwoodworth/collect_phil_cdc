@@ -25,7 +25,7 @@ from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker, mapper
 
 # NOTE: this must be run form the root of this repo
-from ..data_storer import *
+from data_storer import *
 import start
 
 from config import *
