@@ -54,6 +54,7 @@ def make_directories(ids, root_dir):
     floors = map(floorify, ids)
     floor_dirs = set(floors)
     # convert the floors into strings of format like 015XX
+    # also, make the effing directories
     map((lambda dirname: mkdir(root_dir + '/' + dirname)), floor_dirs)
 
 # huge thanks to http://www.ibm.com/developerworks/aix/library/au-threadingpython/
