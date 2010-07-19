@@ -25,7 +25,8 @@ from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker, mapper
 
 
-from credentials import *
+from config import *
+
 data_sqlite_db = create_engine('sqlite://%s:%s@%s/%s' % (data_sqlite_db_user, data_sqlite_db_pass, data_sqlite_db_host, data_sqlite_db_db))
 
 #data_sqlite_db.echo = True     #uncomment for db debug
