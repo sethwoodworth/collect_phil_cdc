@@ -286,7 +286,7 @@ if __name__ == '__main__':
     WORK_LOCALLY = False
     GET_IMAGES = True
     #end_with = get_highest_index_at_phil()
-    end_with = 525
+    end_with = 10
 
 
     # note that we re-do our most recent thing.  just in case we died halfway through it or something

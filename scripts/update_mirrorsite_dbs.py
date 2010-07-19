@@ -27,7 +27,7 @@ from sqlalchemy.orm import sessionmaker, mapper
 # NOTE: this must be run form the root of this repo
 from data_storer import *
 
-from credentials import *
+from config import *
 data_mysql_db = create_engine('mysql://%s:%s@%s/%s' % (data_mysql_db_user, data_mysql_db_pass, data_mysql_db_host, data_mysql_db_db))
 
 metadata = MetaData(bind=data_mysql_db)
