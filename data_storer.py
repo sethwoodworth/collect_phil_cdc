@@ -165,7 +165,8 @@ def get_dict_of_images_to_dl(db_column_name, flag_table):
 
     # remove them from our dict of urls to download images from
     for id_rm in rm_dict:
-        del id_dict[id_rm]
+        if id_rm in id_dict:
+            del id_dict[id_rm]
 
     return id_dict
 
