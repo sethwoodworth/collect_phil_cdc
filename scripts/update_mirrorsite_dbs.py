@@ -25,9 +25,9 @@ from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker, mapper
 
 # NOTE: this must be run form the root of this repo
-from data_storer import *
+from collect_phil_cdc.data_storer import *
 
-from config import *
+from collect_phil_cdc.config import *
 data_mysql_db = create_engine('mysql://%s:%s@%s/%s' % (data_mysql_db_user, data_mysql_db_pass, data_mysql_db_host, data_mysql_db_db))
 
 metadata = MetaData(bind=data_mysql_db)
@@ -73,7 +73,10 @@ def from_sqlite_to_mysql(sqlite_connection, mysql_table_obj):
     result = sqlite_connection.execute("select * from %s where id > %d" % (mysql_table_obj.name, data_mysql_db_max_id))
     # and put it in
     for row in result:
-        mysql_table_obj.insert().execute(row)
+	try:
+		mysql_table_obj.insert().execute(row)
+	except:
+		print "hm. error inserting converting this row from sqlite to mysql"
     result.close()
 
 def hack_wp_db():
