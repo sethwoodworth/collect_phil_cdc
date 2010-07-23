@@ -4,6 +4,11 @@ Collect Public Health Images
 BEFORE YOU DO ANYTHING ELSE:
 copy credentials-sample.py to credentials.py and make the necessary changes
 otherwise nothing will work
+ALSO:
+you need to add the dir containng this repo to your pythonpath
+ALSO, until we do this our damn selves, you need to rename this directory to have underscores, not dashes
+    sorry about that. kinda lame.
+
 
 Requirements
 ------------
