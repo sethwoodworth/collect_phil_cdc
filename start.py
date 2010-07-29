@@ -289,9 +289,15 @@ if __name__ == '__main__':
         WORK_LOCALLY = True
         GET_IMAGES = False
         #end_with = get_highest_index_at_phil()
+        #end_with = 500
 
-        cdc_phil_scrape_range_from_hd(90, 100) # DEBUG: hardcoded TODO
-        return False
+        # NOTE: hard-coded
+        start_from = 100
+        end_with = 110
+        cdc_phil_scrape_range_from_hd(start_from, end_with)
+        return
+        # NOTE: end hard-coded
+
 
         # note that we re-do our most recent thing.  just in case we died halfway through it or something
         # note also that we don't download any images until we run get_all_images()

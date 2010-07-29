@@ -1,22 +1,9 @@
-the issue is that the parser breaks whenever there are links
-    next action: parse a specific id. like 100. fix the bug.
-
-
-
-
-unicode issue
-
 link to the mirror site source code
 gpl the mirror site source code
 
 images should have alt text
 
-links and categories should be stored as json
-
 we should host a tar of the whole dataset
-
-http://phil.cdc.gov/phil/details.asp?pid=
-
 
 categories should be linkified in useful ways
 

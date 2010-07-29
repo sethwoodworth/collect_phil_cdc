@@ -72,6 +72,7 @@ def remove_surrounding_td_tags(str):
 
 def encode_all_nice(fieldvalue):
 #    return unicode(remove_surrounding_td_tags(repr(str(fieldValue))))
+    #return str(fieldvalue.encode("utf-8"))
     return unicode(fieldvalue)
 
 def parse_img(html):
@@ -127,11 +128,11 @@ def parse_img(html):
                         links_tuple_list = []
                         links_rows = fieldValue.findAll('tr')
                         for link_row_html in links_rows: 
-                            desc = encode_all_nice(link_row_html('td')[1].find('a').contents[0])
-                            url = encode_all_nice(link_row_html('td')[1].find('a')['href'])
+                            desc = link_row_html('td')[1].find('a').contents[0]
+                            url = link_row_html('td')[1].find('a')['href']
                             links_tuple_list.append((desc,url))
                         #jsonify it
-                        metadict['links'] = json.dumps(links_tuple_list)
+                        metadict['links'] = encode_all_nice(json.dumps(links_tuple_list))
                 elif fieldName == 'Categories:':
                     if fieldValue.contents:
                         tag_str = ''
