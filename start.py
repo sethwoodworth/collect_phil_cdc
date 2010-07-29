@@ -170,6 +170,7 @@ def cdc_phil_scrape_range_from_hd(start, end):
             continue
         try:
             store_datum(metadata)
+            #print metadata
         except KeyboardInterrupt:
             sys.exit(0)
         except:
@@ -283,30 +284,33 @@ def re_parse_all_metadata():
 
 
 if __name__ == '__main__':
-    # NOTE: if you don't set these the right way, you'll never even touch their servers
-    WORK_LOCALLY = True
-    GET_IMAGES = False
-    #end_with = get_highest_index_at_phil()
-    end_with = 7
+    def main():
+        # NOTE: if you don't set these the right way, you'll never even touch their servers
+        WORK_LOCALLY = True
+        GET_IMAGES = False
+        #end_with = get_highest_index_at_phil()
 
+        cdc_phil_scrape_range_from_hd(90, 100) # DEBUG: hardcoded TODO
+        return False
 
-    # note that we re-do our most recent thing.  just in case we died halfway through it or something
-    # note also that we don't download any images until we run get_all_images()
-    if database_is_empty():
-        print "looks like the database is empty"
-        start_from = 1
-    else:
-        start_from = get_highest_index_in_our_db() + 1
-    if start_from >= end_with:
-        print "looks like our database is already up to date. i wont scrape anything, but i might grab some images if we need them"
-    else:
-        print "looks like the highest index in their db is %s, so i'll end with that" % end_with
-        print "i'm about to scrape out raw dumps and grab metadata for %s - %s" % (start_from, end_with)
-        if WORK_LOCALLY:
-            cdc_phil_scrape_range_from_hd(start_from, end_with)
+        # note that we re-do our most recent thing.  just in case we died halfway through it or something
+        # note also that we don't download any images until we run get_all_images()
+        if database_is_empty():
+            print "looks like the database is empty"
+            start_from = 1
         else:
-            bootstrap_filestructure()
-            cdc_phil_scrape_range(start_from, end_with)
-    # don't worry--this only downloads images that we don't already have marked as downloaded in our database
-    if GET_IMAGES:
-        get_all_images()
+            start_from = get_highest_index_in_our_db() + 1
+        if start_from >= end_with:
+            print "looks like our database is already up to date. i wont scrape anything, but i might grab some images if we need them"
+        else:
+            print "looks like the highest index in their db is %s, so i'll end with that" % end_with
+            print "i'm about to scrape out raw dumps and grab metadata for %s - %s" % (start_from, end_with)
+            if WORK_LOCALLY:
+                cdc_phil_scrape_range_from_hd(start_from, end_with)
+            else:
+                bootstrap_filestructure()
+                cdc_phil_scrape_range(start_from, end_with)
+        # don't worry--this only downloads images that we don't already have marked as downloaded in our database
+        if GET_IMAGES:
+            get_all_images()
+    main()

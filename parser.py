@@ -72,7 +72,7 @@ def remove_surrounding_td_tags(str):
 
 def encode_all_nice(fieldvalue):
 #    return unicode(remove_surrounding_td_tags(repr(str(fieldValue))))
-    return fieldvalue.encode('utf-8')
+    return unicode(fieldvalue)
 
 def parse_img(html):
     metadict = init_dict()
@@ -167,7 +167,7 @@ def parse_img(html):
     return metadict
     
 def test_parse():
-    f = open('./examples/9026.html')
+    f = open('./examples/94.html')
     raw_html = f.read()
     print repr(parse_img(raw_html))
     f.close()

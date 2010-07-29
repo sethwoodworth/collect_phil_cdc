@@ -1,3 +1,9 @@
+the issue is that the parser breaks whenever there are links
+    next action: parse a specific id. like 100. fix the bug.
+
+
+
+
 unicode issue
 
 link to the mirror site source code
