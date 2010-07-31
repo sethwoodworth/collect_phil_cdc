@@ -112,7 +112,7 @@ def get_highest_index_at_phil():
 	
 
 
-def cdc_phil_scrape(id, cj=get_me_a_cookie()):
+def scrape_out_img_page(id, cj=get_me_a_cookie()):
 	url_to_scrape = 'http://phil.cdc.gov/phil/details.asp?pid=' + str(id)
 
 	urlopen = urllib2.urlopen

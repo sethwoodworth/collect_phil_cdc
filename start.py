@@ -26,10 +26,12 @@ import Queue
 import sys
 import threading
 import traceback
-#import urllib2
-from scraper import *
-from data_storer import *
-from parser import *
+
+import cdcphillib as imglib
+# .scraper
+# .parser
+# .data_storer
+
 
 from config import *
 
@@ -107,7 +109,7 @@ def get_images(root_dir, db_column_name, flag_table, flag_table_object):
         t.start()
 
     #dict of urls to download images from
-    id_dict = get_dict_of_images_to_dl(db_column_name, flag_table)
+    id_dict = imglib.data_storer.get_dict_of_images_to_dl(db_column_name, flag_table)
 
     # generate list of ids from results dict
     ids = id_dict.keys()
@@ -122,9 +124,9 @@ def get_images(root_dir, db_column_name, flag_table, flag_table_object):
         
 
 def get_all_images():
-    get_images(THUMB_IMG_DIR, 'url_to_thumb_img', 'thumb_status', thumb_status_table)
-    get_images(LORES_IMG_DIR, 'url_to_lores_img', 'lores_status', lores_status_table)
-    get_images(HIRES_IMG_DIR, 'url_to_hires_img', 'hires_status', hires_status_table)
+    get_images(THUMB_IMG_DIR, 'url_to_thumb_img', 'thumb_status', imglib.data_storer.thumb_status_table)
+    get_images(LORES_IMG_DIR, 'url_to_lores_img', 'lores_status', imglib.data_storer.lores_status_table)
+    get_images(HIRES_IMG_DIR, 'url_to_hires_img', 'hires_status', imglib.data_storer.hires_status_table)
 
 def store_raw_html(id, html):
     ## stores an html dump from the scraping process, just in case
@@ -147,6 +149,7 @@ def get_local_raw_html(id):
 
 
 def cdc_phil_scrape_range_from_hd(start, end):
+    bootstrap_filestructure()
     current_id = start
     failed_indices = []
     while current_id <= end:
@@ -162,14 +165,14 @@ def cdc_phil_scrape_range_from_hd(start, end):
                     'id': current_id,
                     'we_couldnt_parse_it': True,
                     }
-            store_datum(metadata)
+            imglib.data_storer.store_datum(metadata)
             print "we just recorded in the DB the fact that we couldn't parse this one"
             failed_indices.append(current_id)
             traceback.print_exc()
             current_id+=1
             continue
         try:
-            store_datum(metadata)
+            imglib.data_storer.store_datum(metadata)
             #print metadata
         except KeyboardInterrupt:
             sys.exit(0)
@@ -187,7 +190,7 @@ def cdc_phil_scrape_range(start, end):
     ## main glue function
     current_id = start
     try:
-        cookiejar = get_me_a_cookie()
+        cookiejar = imglib.scraper.get_me_a_cookie()
     except KeyboardInterrupt:
         sys.exit(0)
     except:
@@ -199,7 +202,7 @@ def cdc_phil_scrape_range(start, end):
         print "STARTING: " + str(current_id)
         try:
             # 1: fetching html of id, for store and parse
-            html = cdc_phil_scrape(current_id, cookiejar)
+            html = imglib.scraper.scrape_out_img_page(current_id, cookiejar)
         except KeyboardInterrupt:
             sys.exit(0)
         except:
@@ -209,7 +212,7 @@ def cdc_phil_scrape_range(start, end):
             current_id+=1
             continue
         # if we didn't get a session error page:
-        if not is_session_expired_page(html):
+        if not imglib.scraper.is_session_expired_page(html):
             try:
                 # 2: write html to disk
                 store_raw_html(current_id, html)
@@ -222,7 +225,7 @@ def cdc_phil_scrape_range(start, end):
                 continue
             try:
                 # 3: parse the metadata out of their html
-                metadata = parse_img(html)
+                metadata = imglib.parser.parse_img(html)
             except KeyboardInterrupt:
                 sys.exit(0)
             except:
@@ -231,14 +234,14 @@ def cdc_phil_scrape_range(start, end):
                         'id': current_id,
                         'we_couldnt_parse_it': True,
                         }
-                store_datum(metadata)
+                imglib.data_storer.store_datum(metadata)
                 print "we just recorded in the DB the fact that we couldn't parse this one"
                 failed_indices.append(current_id)
                 traceback.print_exc()
                 current_id+=1
                 continue
             try:
-                store_datum(metadata)
+                imglib.data_storer.store_datum(metadata)
             except KeyboardInterrupt:
                 sys.exit(0)
             except:
@@ -286,26 +289,26 @@ def re_parse_all_metadata():
 if __name__ == '__main__':
     def main():
         # NOTE: if you don't set these the right way, you'll never even touch their servers
-        WORK_LOCALLY = True
-        GET_IMAGES = False
+        WORK_LOCALLY = False
+        GET_IMAGES = True
         #end_with = get_highest_index_at_phil()
         #end_with = 500
 
         # NOTE: hard-coded
-        start_from = 100
-        end_with = 110
-        cdc_phil_scrape_range_from_hd(start_from, end_with)
-        return
+        start_from = 1
+        end_with = 10
+        #cdc_phil_scrape_range_from_hd(start_from, end_with)
+        #return
         # NOTE: end hard-coded
 
 
         # note that we re-do our most recent thing.  just in case we died halfway through it or something
         # note also that we don't download any images until we run get_all_images()
-        if database_is_empty():
+        if imglib.data_storer.database_is_empty():
             print "looks like the database is empty"
             start_from = 1
         else:
-            start_from = get_highest_index_in_our_db() + 1
+            start_from = imglib.data_storer.get_highest_index_in_our_db() + 1
         if start_from >= end_with:
             print "looks like our database is already up to date. i wont scrape anything, but i might grab some images if we need them"
         else:
