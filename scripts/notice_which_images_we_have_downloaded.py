@@ -34,8 +34,11 @@ import os
 
 
 def update_db_based_on_img_files_on_disc(root_dir, flag_table_object, extension, cap):
+    # clear out the current statuses
+    # TODO: this doesn't work yet.
+    flag_table_object.delete("*")
     for id in range(1, cap):
-        path = './' + root_dir + '/' + start.floorify(id) + '/' + str(id).zfill(5) + '.' + extension
+        path = root_dir + '/' + start.floorify(id) + '/' + str(id).zfill(5) + '.' + extension
 
         if os.path.isfile(path):
             # mark in the db that this file exists
@@ -44,14 +47,14 @@ def update_db_based_on_img_files_on_disc(root_dir, flag_table_object, extension,
 
 def update_db_based_on_all_img_files_on_disc(cap):
 
+    update_db_based_on_img_files_on_disc(HIRES_IMG_DIR, hires_status_table, 'tif', cap)
     update_db_based_on_img_files_on_disc(THUMB_IMG_DIR, thumb_status_table, 'jpg', cap)
     update_db_based_on_img_files_on_disc(LORES_IMG_DIR, lores_status_table, 'jpg', cap)
-    update_db_based_on_img_files_on_disc(HIRES_IMG_DIR, hires_status_table, 'tif', cap)
 
 
 if __name__ == '__main__':
     # otherwise it would go forever
     # cap = 
     # cap = int(get_highest_index_in_our_db()) + 1
-    cap = 600
+    cap = 11900
     update_db_based_on_all_img_files_on_disc(cap)

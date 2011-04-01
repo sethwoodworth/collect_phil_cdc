@@ -1,2 +1,2 @@
 #!/bin/sh
-sqlite3 data/metadata.sqlite
+sqlite3 ../data/cdc-phil-data/metadata.sqlite

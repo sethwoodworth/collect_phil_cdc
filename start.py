@@ -34,8 +34,8 @@ from parser import *
 from config import *
 
 def mkdir(dirname):
-    if not os.path.isdir("./" + dirname + "/"):
-        os.mkdir("./" + dirname + "/")
+    if not os.path.isdir(dirname + "/"):
+        os.mkdir(dirname + "/")
 
 def bootstrap_filestructure():
     mkdir(THUMB_IMG_DIR)    
@@ -74,7 +74,7 @@ class ImgDownloader(threading.Thread):
                 print id_url_tuple
                 id = id_url_tuple[0]
                 url = id_url_tuple[1]
-                path = './' + self.root_dir + '/' + floorify(id) + '/' + str(id).zfill(5) + url[-4:]
+                path = self.root_dir + '/' + floorify(id) + '/' + str(id).zfill(5) + url[-4:]
                 urllib.urlretrieve(url, path)
                 print "finished downloading " + url
                 id_status_dict = {'id': id, 'status': 1}
@@ -122,9 +122,9 @@ def get_images(root_dir, db_column_name, flag_table, flag_table_object):
         
 
 def get_all_images():
-    get_images(THUMB_IMG_DIR, 'url_to_thumb_img', 'thumb_status', thumb_status_table)
     get_images(LORES_IMG_DIR, 'url_to_lores_img', 'lores_status', lores_status_table)
     get_images(HIRES_IMG_DIR, 'url_to_hires_img', 'hires_status', hires_status_table)
+    get_images(THUMB_IMG_DIR, 'url_to_thumb_img', 'thumb_status', thumb_status_table)
 
 def store_raw_html(id, html):
     ## stores an html dump from the scraping process, just in case
@@ -286,17 +286,10 @@ def re_parse_all_metadata():
 if __name__ == '__main__':
     def main():
         # NOTE: if you don't set these the right way, you'll never even touch their servers
-        WORK_LOCALLY = True
-        GET_IMAGES = False
-        #end_with = get_highest_index_at_phil()
+        WORK_LOCALLY = False
+        GET_IMAGES = True
+        end_with = get_highest_index_at_phil()
         #end_with = 500
-
-        # NOTE: hard-coded
-        start_from = 100
-        end_with = 110
-        cdc_phil_scrape_range_from_hd(start_from, end_with)
-        return
-        # NOTE: end hard-coded
 
 
         # note that we re-do our most recent thing.  just in case we died halfway through it or something
