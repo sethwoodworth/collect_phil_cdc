@@ -36,8 +36,8 @@ import cdcphillib as imglib
 from config import *
 
 def mkdir(dirname):
-    if not os.path.isdir("./" + dirname + "/"):
-        os.mkdir("./" + dirname + "/")
+    if not os.path.isdir(dirname + "/"):
+        os.mkdir(dirname + "/")
 
 def bootstrap_filestructure():
     mkdir(THUMB_IMG_DIR)    
@@ -76,7 +76,7 @@ class ImgDownloader(threading.Thread):
                 print id_url_tuple
                 id = id_url_tuple[0]
                 url = id_url_tuple[1]
-                path = './' + self.root_dir + '/' + floorify(id) + '/' + str(id).zfill(5) + url[-4:]
+                path = self.root_dir + '/' + floorify(id) + '/' + str(id).zfill(5) + url[-4:]
                 urllib.urlretrieve(url, path)
                 print "finished downloading " + url
                 id_status_dict = {'id': id, 'status': 1}
