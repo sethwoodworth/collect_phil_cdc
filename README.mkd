@@ -1,3 +1,11 @@
+DEPRECATED.
+-----------
+This has been replaced with this:
+[https://github.com/gameguy43/usable_image_scraper]
+
+The remainder of this source should only be used for reference, the above is a better implementation of the same thing.
+
+
 Collect Public Health Images
 ============================
 
